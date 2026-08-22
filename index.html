@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es" x-data="sercoplusApp()" x-init="initApp()">
+<html lang="es" x-data="sercoplusApp()" x-init="initApp()" :class="{ 'dark': darkMode }">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sercoplus - Distribuidora Mayorista de Cómputo</title>
+    <title>Sercoplus | ROG Strix Gaming Edition - Mayorista de Cómputo</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js CDN -->
@@ -11,22 +11,37 @@
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700&family=Open+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        'serco-red': '#E30613',
-                        'serco-dark-red': '#C70511',
-                        'serco-blue': '#1A1A5E',
-                        'serco-gray': '#F5F5F5',
-                        'serco-dark': '#333333',
-                        'serco-green': '#28A745',
-                        'serco-orange': '#FF6600',
+                        'serco-red': '#FF003F',
+                        'serco-dark-red': '#C7002E',
+                        'serco-pink': '#FF007F',
+                        'serco-magenta': '#E01E84',
+                        'serco-blue': '#00F0FF',
+                        'serco-neon-blue': '#0088FF',
+                        'serco-purple': '#7928CA',
+                        'rog-black': '#07080C',
+                        'rog-dark': '#0D1017',
+                        'rog-surface': '#131722',
+                        'rog-card': '#181E2C',
+                        'rog-card-hover': '#1F273A',
+                        'rog-border': '#263047',
                     },
                     fontFamily: {
                         'sans': ['Open Sans', 'sans-serif'],
+                        'gaming': ['Rajdhani', 'sans-serif'],
+                        'orbitron': ['Orbitron', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'rog-glow-red': '0 0 20px rgba(255, 0, 63, 0.45)',
+                        'rog-glow-pink': '0 0 20px rgba(255, 0, 127, 0.45)',
+                        'rog-glow-blue': '0 0 20px rgba(0, 240, 255, 0.45)',
+                        'rog-card': '0 8px 32px rgba(0, 0, 0, 0.4)',
                     }
                 }
             }
@@ -34,142 +49,222 @@
     </script>
     <style>
         [x-cloak] { display: none !important; }
-        /* Custom scrollbar for cart drawer */
-        .cart-scroll::-webkit-scrollbar { width: 6px; }
-        .cart-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
-        .cart-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
-        .cart-scroll::-webkit-scrollbar-thumb:hover { background: #999; }
-        /* Hero slider transition */
-        .slide-fade-enter { opacity: 0; transform: translateX(20px); }
-        .slide-fade-leave { opacity: 0; transform: translateX(-20px); }
-        /* Mega menu animation */
+        
+        /* Custom scrollbars */
+        .cart-scroll::-webkit-scrollbar, .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+        .cart-scroll::-webkit-scrollbar-track, .custom-scroll::-webkit-scrollbar-track { background: #0d1017; }
+        .cart-scroll::-webkit-scrollbar-thumb, .custom-scroll::-webkit-scrollbar-thumb { 
+            background: linear-gradient(180deg, #FF003F, #FF007F, #00F0FF); 
+            border-radius: 3px; 
+        }
+        
+        /* ROG Cyber Gradient */
+        .bg-rog-gradient {
+            background: linear-gradient(135deg, #FF003F 0%, #FF007F 40%, #7928CA 75%, #00F0FF 100%);
+        }
+        .text-rog-gradient {
+            background: linear-gradient(135deg, #FF003F 0%, #FF007F 45%, #00F0FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-cyber-blue {
+            background: linear-gradient(135deg, #00F0FF 0%, #0088FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .border-rog-gradient {
+            border-image: linear-gradient(90deg, #FF003F, #FF007F, #00F0FF) 1;
+        }
+
+        /* Product Card Cyberpunk Styling */
+        .product-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        .dark .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 0, 127, 0.25);
+            border-color: rgba(255, 0, 127, 0.6);
+        }
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Mega menu cyber animation */
         .mega-menu { display: none; }
         .menu-item:hover .mega-menu { display: block; }
-        /* Product card hover */
-        .product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.12); transform: translateY(-2px); }
-        .product-card { transition: all 0.3s ease; }
-        /* WhatsApp float button pulse */
-        @keyframes pulse-green { 
-            0% { box-shadow: 0 0 0 0 rgba(37,211,102,0.5); }
-            70% { box-shadow: 0 0 0 15px rgba(37,211,102,0); }
-            100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); }
+        
+        /* WhatsApp pulse animation with cyber aura */
+        @keyframes pulse-rog { 
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6), 0 0 15px rgba(0, 240, 255, 0.4); }
+            70% { box-shadow: 0 0 0 16px rgba(37, 211, 102, 0), 0 0 30px rgba(255, 0, 127, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0), 0 0 0 rgba(0, 240, 255, 0); }
         }
-        .whatsapp-pulse { animation: pulse-green 2s infinite; }
-        /* Star rating */
-        .star-empty { color: #ddd; }
-        .star-filled { color: #ffc107; }
+        .whatsapp-pulse { animation: pulse-rog 2.2s infinite; }
+        
+        /* Neon scanline accent */
+        .cyber-grid {
+            background-size: 30px 30px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+        
         /* Carousel smooth scroll */
         .carousel-scroll { scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none; }
         .carousel-scroll::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="bg-white font-sans text-serco-dark min-h-screen">
+<body class="bg-[#F8F9FC] dark:bg-rog-black text-gray-800 dark:text-gray-200 font-sans min-h-screen transition-colors duration-300 antialiased selection:bg-serco-pink selection:text-white">
 
     <!-- ============================================================
-         TOP ANNOUNCEMENT BAR
+         TOP GLOWING ACCENT BAR (ROG CYBER GRADIENT)
          ============================================================ -->
-    <div class="bg-serco-blue text-white text-xs py-1.5 hidden md:block">
+    <div class="h-1 bg-rog-gradient w-full shadow-[0_0_15px_rgba(255,0,127,0.7)] z-50 relative"></div>
+
+    <!-- ============================================================
+         TOP ANNOUNCEMENT BAR (ROG DARK THEME)
+         ============================================================ -->
+    <div class="bg-gray-900 dark:bg-[#07090E] border-b border-gray-800 dark:border-[#1E2538] text-white text-xs py-2 hidden md:block">
         <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <span><i class="fas fa-phone-alt mr-1"></i> (01) 618522 - 954547164</span>
-                <span><i class="fas fa-envelope mr-1"></i> ventas@sercoplus.com</span>
+            <div class="flex items-center gap-6 text-gray-300">
+                <span class="flex items-center gap-1.5"><i class="fas fa-phone-alt text-serco-pink text-[11px]"></i> (01) 618522 - 954547164</span>
+                <span class="flex items-center gap-1.5"><i class="fas fa-envelope text-serco-blue text-[11px]"></i> ventas@sercoplus.com</span>
+                <span class="flex items-center gap-1.5 text-xs text-yellow-400 font-medium"><i class="fas fa-shield-alt text-serco-red"></i> Distribuidor Oficial ASUS ROG & Componentes High-End</span>
             </div>
-            <div class="flex items-center gap-4">
-                <a href="#" class="hover:text-gray-300 transition"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="hover:text-gray-300 transition"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="hover:text-gray-300 transition"><i class="fab fa-youtube"></i></a>
-                <span class="text-yellow-400 font-semibold"><i class="fas fa-truck mr-1"></i> Envíos a todo el Perú</span>
+            <div class="flex items-center gap-5">
+                <div class="flex items-center gap-3 text-gray-400">
+                    <a href="#" class="hover:text-serco-blue transition"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="hover:text-serco-pink transition"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="hover:text-serco-red transition"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="hover:text-serco-blue transition"><i class="fab fa-discord"></i></a>
+                </div>
+                <div class="h-3 w-[1px] bg-gray-700"></div>
+                <span class="text-serco-blue font-semibold flex items-center gap-1"><i class="fas fa-truck-fast text-serco-pink"></i> Envíos a todo el Perú</span>
             </div>
         </div>
     </div>
 
     <!-- ============================================================
-         MAIN HEADER
+         MAIN HEADER (DARK SLEEK GLASSMORPHISM)
          ============================================================ -->
-    <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
+    <header class="bg-white/95 dark:bg-[#0D1017]/95 backdrop-blur-md shadow-lg dark:shadow-[0_4px_25px_rgba(0,0,0,0.7)] sticky top-0 z-50 border-b border-gray-200 dark:border-[#1E2538] transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-            <!-- Logo -->
-            <a href="#" class="flex-shrink-0">
-                <div class="flex items-center">
-                    <div class="bg-serco-red text-white p-1.5 rounded mr-1">
-                        <i class="fas fa-server text-lg"></i>
+            
+            <!-- Logo Sercoplus + ROG Edition Badge -->
+            <a href="#" class="flex-shrink-0 flex items-center gap-3 group">
+                <div class="relative">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-serco-red via-serco-pink to-serco-blue p-[2px] shadow-rog-glow-pink">
+                        <div class="w-full h-full bg-[#0D1017] rounded-[6px] flex items-center justify-center">
+                            <i class="fas fa-gamepad text-lg text-serco-pink group-hover:text-serco-blue transition-colors duration-300"></i>
+                        </div>
                     </div>
-                    <div class="leading-tight">
-                        <span class="text-serco-red font-extrabold text-xl tracking-tight">SERCO</span><span class="font-extrabold text-xl text-serco-dark tracking-tight">PLUS</span>
-                        <p class="text-[9px] text-gray-500 -mt-0.5 uppercase tracking-wider">Distribuidora Mayorista de Cómputo</p>
+                </div>
+                <div class="leading-tight">
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-serco-red dark:text-[#FF003F] font-orbitron font-black text-xl tracking-wider">SERCO</span>
+                        <span class="font-orbitron font-black text-xl text-gray-900 dark:text-white tracking-wider">PLUS</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-[8px] font-gaming font-bold uppercase tracking-widest text-serco-blue bg-serco-blue/10 dark:bg-serco-blue/20 px-1.5 py-0.2 rounded border border-serco-blue/30">
+                            ROG STRIX EDITION
+                        </span>
                     </div>
                 </div>
             </a>
 
-            <!-- Search Bar -->
+            <!-- Search Bar with Neon Cyber Focus -->
             <div class="flex-1 max-w-xl hidden md:block relative" x-data="{ showSuggestions: false }">
-                <div class="flex">
+                <div class="relative flex items-center">
                     <input 
                         type="text" 
                         x-model="searchQuery" 
                         @focus="showSuggestions = true"
                         @click.away="showSuggestions = false"
-                        placeholder="Búsqueda en catálogo" 
-                        class="w-full border border-gray-300 rounded-l-md px-4 py-2 text-sm focus:outline-none focus:border-serco-red focus:ring-1 focus:ring-serco-red"
+                        placeholder="Buscar ROG Strix, RTX 5080, Laptops Gamer, Monitores..." 
+                        class="w-full bg-gray-100 dark:bg-[#151926] text-gray-900 dark:text-gray-100 placeholder-gray-500 border border-gray-300 dark:border-[#252E46] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-serco-pink focus:ring-2 focus:ring-serco-pink/30 dark:focus:shadow-[0_0_15px_rgba(255,0,127,0.3)] transition-all"
                     >
-                    <button class="bg-white border border-l-0 border-gray-300 rounded-r-md px-4 hover:bg-gray-50 transition">
-                        <i class="fas fa-search text-gray-500"></i>
+                    <button class="absolute right-1 top-1 bottom-1 px-4 bg-gradient-to-r from-serco-red to-serco-pink text-white rounded-md hover:from-serco-pink hover:to-serco-blue transition-all flex items-center justify-center shadow-md">
+                        <i class="fas fa-search text-xs"></i>
                     </button>
                 </div>
+                
                 <!-- Search Suggestions Dropdown -->
                 <div x-show="showSuggestions && searchQuery.length > 1" 
                      x-cloak
                      x-transition:enter="transition ease-out duration-200"
-                     x-transition:enter-start="opacity-0 transform -translate-y-1"
+                     x-transition:enter-start="opacity-0 transform -translate-y-2"
                      x-transition:enter-end="opacity-100 transform translate-y-0"
-                     class="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-b-md shadow-lg z-50 mt-0.5 max-h-72 overflow-y-auto">
+                     class="absolute top-full left-0 right-0 bg-white dark:bg-[#131724] border border-gray-200 dark:border-[#28334E] rounded-lg shadow-2xl z-50 mt-1.5 max-h-80 overflow-y-auto custom-scroll divide-y divide-gray-100 dark:divide-[#1F273D]">
                     <template x-for="product in filteredProducts()" :key="product.id">
-                        <div class="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-0">
-                            <img :src="product.image" :alt="product.name" class="w-10 h-10 object-contain">
+                        <div @click="addToCart(product); showSuggestions = false" class="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-[#1A2033] cursor-pointer transition">
+                            <img :src="product.image" :alt="product.name" class="w-11 h-11 object-contain rounded bg-gray-100 dark:bg-[#0A0D14] p-1 border border-gray-200 dark:border-gray-800">
                             <div class="flex-1 min-w-0">
-                                <p class="text-xs font-medium truncate" x-text="product.name"></p>
-                                <p class="text-xs text-serco-red font-bold" x-text="'S/ ' + product.pricePEN.toFixed(2)"></p>
+                                <p class="text-xs font-semibold text-gray-900 dark:text-gray-200 truncate" x-text="product.name"></p>
+                                <div class="flex items-center gap-2 mt-0.5">
+                                    <span class="text-xs text-serco-pink font-bold font-gaming" x-text="'S/ ' + product.pricePEN.toFixed(2)"></span>
+                                    <span class="text-[11px] text-serco-blue font-gaming" x-text="'($ ' + product.priceUSD.toFixed(2) + ')'"></span>
+                                </div>
                             </div>
+                            <span class="text-[10px] bg-serco-pink/20 text-serco-pink px-2 py-1 rounded font-bold uppercase"><i class="fas fa-plus"></i></span>
                         </div>
                     </template>
-                    <div x-show="filteredProducts().length === 0" class="p-4 text-center text-sm text-gray-500">
-                        No se encontraron resultados
+                    <div x-show="filteredProducts().length === 0" class="p-4 text-center text-xs text-gray-400">
+                        <i class="fas fa-search mr-1"></i> No se encontraron productos para "<span x-text="searchQuery"></span>"
                     </div>
                 </div>
             </div>
 
-            <!-- Right Actions -->
-            <div class="flex items-center gap-4">
-                <!-- Account -->
-                <a href="#" class="hidden md:flex items-center gap-2 text-sm text-gray-600 hover:text-serco-red transition">
-                    <i class="fas fa-user text-lg"></i>
-                    <span class="text-xs">Iniciar Sesión</span>
+            <!-- Right Header Actions -->
+            <div class="flex items-center gap-3 md:gap-5">
+                <!-- Theme Switcher Button -->
+                <button @click="toggleTheme()" 
+                        class="relative p-2.5 rounded-lg border border-gray-300 dark:border-[#26304A] bg-gray-100 dark:bg-[#151926] text-gray-700 dark:text-yellow-400 hover:text-serco-pink dark:hover:text-serco-blue hover:border-serco-pink transition-all shadow-sm"
+                        :title="darkMode ? 'Cambiar a Modo Claro' : 'Activar Modo ROG Strix Oscuro'">
+                    <i class="fas" :class="darkMode ? 'fa-sun text-yellow-400' : 'fa-moon text-indigo-600'"></i>
+                </button>
+
+                <!-- User Account -->
+                <a href="#" class="hidden md:flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 hover:text-serco-pink transition">
+                    <div class="w-8 h-8 rounded-full bg-gray-100 dark:bg-[#161B29] border border-gray-300 dark:border-[#252E46] flex items-center justify-center text-serco-pink">
+                        <i class="fas fa-user text-xs"></i>
+                    </div>
+                    <div class="text-left leading-tight hidden lg:block">
+                        <span class="text-[10px] text-gray-500 dark:text-gray-400 block">Bienvenido</span>
+                        <span class="text-xs font-bold font-gaming">Mi Cuenta</span>
+                    </div>
                 </a>
-                <!-- Favorites -->
-                <a href="#" class="hidden md:block text-gray-600 hover:text-serco-red transition relative">
-                    <i class="fas fa-heart text-lg"></i>
+
+                <!-- Favorites Wishlist -->
+                <a href="#" class="hidden md:flex relative p-2.5 rounded-lg border border-gray-300 dark:border-[#26304A] bg-gray-100 dark:bg-[#151926] text-gray-700 dark:text-gray-300 hover:text-serco-red hover:border-serco-red transition">
+                    <i class="fas fa-heart text-sm"></i>
                 </a>
-                <!-- Cart Button -->
-                <button @click="cartOpen = true" class="relative text-gray-700 hover:text-serco-red transition">
-                    <i class="fas fa-shopping-cart text-xl"></i>
+
+                <!-- Cart Button with Cyber Glow Badge -->
+                <button @click="cartOpen = true" 
+                        class="relative flex items-center gap-2.5 px-3.5 py-2 rounded-lg bg-gradient-to-r from-serco-red via-serco-pink to-serco-magenta text-white font-bold hover:shadow-rog-glow-pink transition-all duration-300">
+                    <i class="fas fa-shopping-cart text-sm"></i>
+                    <span class="hidden sm:inline text-xs font-gaming font-bold uppercase tracking-wider">Carrito</span>
                     <span x-show="cart.length > 0" 
                           x-text="cartTotalItems()"
-                          class="absolute -top-2 -right-2.5 bg-serco-red text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                          class="bg-serco-blue text-gray-950 font-orbitron text-[11px] font-black rounded-full min-w-[20px] h-5 px-1 flex items-center justify-center shadow-[0_0_10px_rgba(0,240,255,0.8)]">
                     </span>
                 </button>
-                <!-- Mobile Menu Toggle -->
-                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-gray-700">
+
+                <!-- Mobile Menu Button -->
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 text-gray-700 dark:text-gray-200">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
         </div>
 
-        <!-- Mobile Search -->
+        <!-- Mobile Search Bar -->
         <div class="md:hidden px-4 pb-3">
-            <div class="flex">
-                <input type="text" x-model="searchQuery" placeholder="Búsqueda en catálogo" 
-                       class="w-full border border-gray-300 rounded-l-md px-3 py-2 text-sm focus:outline-none focus:border-serco-red">
-                <button class="bg-serco-red text-white px-4 rounded-r-md">
+            <div class="relative flex items-center">
+                <input type="text" x-model="searchQuery" placeholder="Buscar productos..." 
+                       class="w-full bg-gray-100 dark:bg-[#151926] text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-[#252E46] rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-serco-pink">
+                <button class="absolute right-1 top-1 bottom-1 px-3 bg-serco-pink text-white rounded text-xs">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
@@ -177,29 +272,31 @@
     </header>
 
     <!-- ============================================================
-         MAIN NAVIGATION BAR (RED)
+         MAIN NAVIGATION BAR (ROG STRIX PALETTE: RED - PINK - BLUE)
          ============================================================ -->
-    <nav class="bg-serco-red text-white sticky top-[65px] md:top-[73px] z-40 shadow-md">
+    <nav class="bg-[#11141E] dark:bg-[#0B0D14] border-b border-[#20273B] text-white sticky top-[65px] md:top-[69px] z-40 shadow-xl">
         <div class="max-w-7xl mx-auto px-4">
-            <!-- Desktop Nav -->
-            <ul class="hidden md:flex items-center gap-0 text-sm font-semibold">
-                <!-- Categorías -->
-                <li class="menu-item relative group">
-                    <a href="#" class="flex items-center gap-1.5 px-4 py-3 hover:bg-serco-dark-red transition">
-                        <i class="fas fa-th-large text-xs"></i> CATEGORÍAS <i class="fas fa-chevron-down text-[10px]"></i>
+            <ul class="hidden md:flex items-center gap-1 text-xs font-gaming font-bold uppercase tracking-wider">
+                
+                <!-- Categorías Mega Menu -->
+                <li class="menu-item relative">
+                    <a href="#" class="flex items-center gap-2 px-4 py-3.5 bg-gradient-to-r from-serco-red to-serco-pink text-white hover:brightness-110 transition rounded-t-sm shadow-[0_0_15px_rgba(255,0,63,0.3)]">
+                        <i class="fas fa-th-large"></i> CATEGORÍAS <i class="fas fa-chevron-down text-[9px]"></i>
                     </a>
-                    <!-- Mega Menu -->
-                    <div class="mega-menu absolute left-0 top-full bg-white text-serco-dark shadow-xl rounded-b-lg border border-gray-200 w-[700px] z-50">
-                        <div class="grid grid-cols-3 gap-0 p-5">
+                    <!-- Mega Menu Dropdown -->
+                    <div class="mega-menu absolute left-0 top-full bg-[#121624]/98 backdrop-blur-xl text-gray-200 shadow-2xl rounded-b-xl border border-serco-pink/40 w-[780px] z-50 p-6 cyber-grid shadow-[0_15px_50px_rgba(0,0,0,0.8)]">
+                        <div class="grid grid-cols-3 gap-6">
                             <template x-for="cat in categories" :key="cat.name">
-                                <div class="mb-4">
-                                    <h4 class="font-bold text-sm text-serco-red mb-2 flex items-center gap-2">
-                                        <i :class="cat.icon" class="text-base"></i> 
+                                <div class="space-y-2">
+                                    <h4 class="font-orbitron font-bold text-xs text-serco-blue flex items-center gap-2 border-b border-[#252E46] pb-1.5">
+                                        <i :class="cat.icon" class="text-serco-pink"></i> 
                                         <span x-text="cat.name"></span>
                                     </h4>
                                     <ul class="space-y-1">
                                         <template x-for="sub in cat.subcategories" :key="sub">
-                                            <li><a href="#" class="text-xs text-gray-600 hover:text-serco-red hover:pl-1 transition-all block py-0.5" x-text="sub"></a></li>
+                                            <li>
+                                                <a href="#" class="text-[11px] text-gray-400 hover:text-serco-pink hover:translate-x-1 transition-all block py-0.5" x-text="sub"></a>
+                                            </li>
                                         </template>
                                     </ul>
                                 </div>
@@ -207,83 +304,70 @@
                         </div>
                     </div>
                 </li>
-                <li class="menu-item relative group">
-                    <a href="#" class="flex items-center gap-1 px-4 py-3 hover:bg-serco-dark-red transition">
-                        LAPTOPS <i class="fas fa-chevron-down text-[10px]"></i>
+
+                <!-- Laptops Menu -->
+                <li class="menu-item relative">
+                    <a href="#" class="flex items-center gap-1.5 px-4 py-3.5 text-gray-300 hover:text-serco-pink hover:bg-[#161B29] transition">
+                        <i class="fas fa-laptop text-serco-blue"></i> LAPTOPS <i class="fas fa-chevron-down text-[9px]"></i>
                     </a>
-                    <div class="mega-menu absolute left-0 top-full bg-white text-serco-dark shadow-xl rounded-b-lg border border-gray-200 w-[400px] z-50">
-                        <div class="grid grid-cols-2 gap-4 p-5">
+                    <div class="mega-menu absolute left-0 top-full bg-[#121624]/98 backdrop-blur-xl text-gray-200 shadow-2xl rounded-b-xl border border-serco-blue/40 w-[450px] z-50 p-5">
+                        <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <h4 class="font-bold text-sm text-serco-red mb-2"><i class="fas fa-laptop mr-1"></i> Por Marca</h4>
-                                <ul class="space-y-1 text-xs text-gray-600">
-                                    <li><a href="#" class="hover:text-serco-red transition block py-0.5">Laptops ASUS</a></li>
-                                    <li><a href="#" class="hover:text-serco-red transition block py-0.5">Laptops LENOVO</a></li>
-                                    <li><a href="#" class="hover:text-serco-red transition block py-0.5">Laptops HP</a></li>
-                                    <li><a href="#" class="hover:text-serco-red transition block py-0.5">Laptops ACER</a></li>
-                                    <li><a href="#" class="hover:text-serco-red transition block py-0.5">Laptops MSI</a></li>
-                                    <li><a href="#" class="hover:text-serco-red transition block py-0.5">Laptops DELL</a></li>
+                                <h4 class="font-orbitron font-bold text-xs text-serco-pink mb-2"><i class="fas fa-shield-alt mr-1"></i> ROG & Gaming</h4>
+                                <ul class="space-y-1.5 text-xs text-gray-400">
+                                    <li><a href="#" class="hover:text-serco-blue transition flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-serco-red rounded-full"></span> ROG Strix SCAR 18</a></li>
+                                    <li><a href="#" class="hover:text-serco-blue transition flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-serco-pink rounded-full"></span> ROG Zephyrus G16</a></li>
+                                    <li><a href="#" class="hover:text-serco-blue transition flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-serco-blue rounded-full"></span> ASUS TUF Gaming</a></li>
+                                    <li><a href="#" class="hover:text-serco-blue transition flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-serco-purple rounded-full"></span> MSI Raider / Katana</a></li>
+                                    <li><a href="#" class="hover:text-serco-blue transition flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-gray-500 rounded-full"></span> Lenovo Legion Pro</a></li>
                                 </ul>
                             </div>
                             <div>
-                                <h4 class="font-bold text-sm text-serco-red mb-2"><i class="fas fa-gamepad mr-1"></i> Por Tipo</h4>
-                                <ul class="space-y-1 text-xs text-gray-600">
-                                    <li><a href="#" class="hover:text-serco-red transition block py-0.5">Laptops Gaming</a></li>
-                                    <li><a href="#" class="hover:text-serco-red transition block py-0.5">Laptops Empresariales</a></li>
-                                    <li><a href="#" class="hover:text-serco-red transition block py-0.5">Laptops Workstation</a></li>
-                                    <li><a href="#" class="hover:text-serco-red transition block py-0.5">Ultrabooks</a></li>
-                                    <li><a href="#" class="hover:text-serco-red transition block py-0.5">Chromebooks</a></li>
+                                <h4 class="font-orbitron font-bold text-xs text-serco-blue mb-2"><i class="fas fa-microchip mr-1"></i> Tarjeta Gráfica</h4>
+                                <ul class="space-y-1.5 text-xs text-gray-400">
+                                    <li><a href="#" class="hover:text-serco-pink transition block">GeForce RTX 5090</a></li>
+                                    <li><a href="#" class="hover:text-serco-pink transition block">GeForce RTX 5080</a></li>
+                                    <li><a href="#" class="hover:text-serco-pink transition block">GeForce RTX 5070</a></li>
+                                    <li><a href="#" class="hover:text-serco-pink transition block">GeForce RTX 4060</a></li>
+                                    <li><a href="#" class="hover:text-serco-pink transition block">AMD Radeon RX 7000</a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </li>
-                <li class="menu-item relative group">
-                    <a href="#" class="flex items-center gap-1 px-4 py-3 hover:bg-serco-dark-red transition">
-                        MARCAS <i class="fas fa-chevron-down text-[10px]"></i>
+
+                <!-- Marcas Menu -->
+                <li class="menu-item relative">
+                    <a href="#" class="flex items-center gap-1.5 px-4 py-3.5 text-gray-300 hover:text-serco-blue hover:bg-[#161B29] transition">
+                        <i class="fas fa-tag text-serco-pink"></i> MARCAS <i class="fas fa-chevron-down text-[9px]"></i>
                     </a>
-                    <div class="mega-menu absolute left-0 top-full bg-white text-serco-dark shadow-xl rounded-b-lg border border-gray-200 w-[500px] z-50">
-                        <div class="grid grid-cols-4 gap-3 p-5">
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-medium">ASUS</a>
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-medium">MSI</a>
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-medium">GIGABYTE</a>
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-medium">CORSAIR</a>
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-medium">LOGITECH</a>
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-medium">KINGSTON</a>
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-medium">AMD</a>
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-medium">INTEL</a>
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-medium">NVIDIA</a>
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-medium">ANTRYX</a>
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-medium">ADDLINK</a>
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-medium">BROTHER</a>
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-medium">DELL</a>
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-medium">HP</a>
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-medium">LENOVO</a>
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-medium">ACER</a>
+                    <div class="mega-menu absolute left-0 top-full bg-[#121624]/98 backdrop-blur-xl text-gray-200 shadow-2xl rounded-b-xl border border-serco-pink/40 w-[550px] z-50 p-5">
+                        <div class="grid grid-cols-4 gap-3 text-xs">
+                            <a href="#" class="p-2 rounded bg-[#181E2E] hover:bg-serco-red/20 hover:text-serco-pink transition font-bold text-center border border-gray-800">ASUS ROG</a>
+                            <a href="#" class="p-2 rounded bg-[#181E2E] hover:bg-serco-red/20 hover:text-serco-pink transition font-bold text-center border border-gray-800">MSI</a>
+                            <a href="#" class="p-2 rounded bg-[#181E2E] hover:bg-serco-blue/20 hover:text-serco-blue transition font-bold text-center border border-gray-800">GIGABYTE</a>
+                            <a href="#" class="p-2 rounded bg-[#181E2E] hover:bg-serco-pink/20 hover:text-serco-pink transition font-bold text-center border border-gray-800">CORSAIR</a>
+                            <a href="#" class="p-2 rounded bg-[#181E2E] hover:bg-serco-blue/20 hover:text-serco-blue transition font-bold text-center border border-gray-800">LOGITECH</a>
+                            <a href="#" class="p-2 rounded bg-[#181E2E] hover:bg-serco-red/20 hover:text-serco-red transition font-bold text-center border border-gray-800">KINGSTON</a>
+                            <a href="#" class="p-2 rounded bg-[#181E2E] hover:bg-serco-red/20 hover:text-serco-red transition font-bold text-center border border-gray-800">AMD RYZEN</a>
+                            <a href="#" class="p-2 rounded bg-[#181E2E] hover:bg-serco-blue/20 hover:text-serco-blue transition font-bold text-center border border-gray-800">INTEL</a>
                         </div>
                     </div>
                 </li>
-                <li class="menu-item relative group">
-                    <a href="#" class="flex items-center gap-1 px-4 py-3 hover:bg-serco-dark-red transition">
-                        MARCAS MÁS VENDIDAS <i class="fas fa-chevron-down text-[10px]"></i>
+
+                <li><a href="#" class="px-4 py-3.5 text-gray-300 hover:text-serco-pink hover:bg-[#161B29] transition inline-block">MARCAS MÁS VENDIDAS</a></li>
+                <li><a href="#" class="px-4 py-3.5 text-gray-300 hover:text-serco-pink hover:bg-[#161B29] transition inline-block">TÉRMINOS</a></li>
+                <li><a href="#" class="px-4 py-3.5 text-gray-300 hover:text-serco-pink hover:bg-[#161B29] transition inline-block">MEDIOS DE PAGO</a></li>
+                
+                <li class="ml-auto">
+                    <a href="#" class="px-4 py-3.5 text-serco-blue hover:text-serco-pink transition inline-flex items-center gap-1.5 font-bold">
+                        <i class="fas fa-map-marker-alt text-serco-pink"></i> UBÍCANOS
                     </a>
-                    <div class="mega-menu absolute left-0 top-full bg-white text-serco-dark shadow-xl rounded-b-lg border border-gray-200 w-[400px] z-50">
-                        <div class="grid grid-cols-3 gap-3 p-5">
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-bold">ASUS</a>
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-bold">MSI</a>
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-bold">GIGABYTE</a>
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-bold">CORSAIR</a>
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-bold">LOGITECH</a>
-                            <a href="#" class="text-xs text-gray-600 hover:text-serco-red transition py-1 font-bold">KINGSTON</a>
-                        </div>
-                    </div>
                 </li>
-                <li><a href="#" class="px-4 py-3 hover:bg-serco-dark-red transition inline-block">TÉRMINOS</a></li>
-                <li><a href="#" class="px-4 py-3 hover:bg-serco-dark-red transition inline-block">MEDIOS DE PAGO</a></li>
-                <li><a href="#" class="px-4 py-3 hover:bg-serco-dark-red transition inline-block text-yellow-300">UBÍCANOS</a></li>
             </ul>
         </div>
 
-        <!-- Mobile Nav Drawer -->
+        <!-- Mobile Drawer -->
         <div x-show="mobileMenuOpen" x-cloak
              x-transition:enter="transition ease-out duration-300"
              x-transition:enter-start="-translate-x-full"
@@ -292,424 +376,521 @@
              x-transition:leave-start="translate-x-0"
              x-transition:leave-end="-translate-x-full"
              class="md:hidden fixed inset-0 z-50">
-            <div class="absolute inset-0 bg-black/50" @click="mobileMenuOpen = false"></div>
-            <div class="relative bg-white w-72 h-full overflow-y-auto shadow-xl">
-                <div class="bg-serco-red text-white p-4 flex justify-between items-center">
-                    <span class="font-bold text-lg">Menú</span>
-                    <button @click="mobileMenuOpen = false"><i class="fas fa-times text-xl"></i></button>
+            <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="mobileMenuOpen = false"></div>
+            <div class="relative bg-[#0D1017] border-r border-[#20273B] w-72 h-full overflow-y-auto shadow-2xl text-gray-200">
+                <div class="bg-gradient-to-r from-serco-red via-serco-pink to-serco-blue text-white p-4 flex justify-between items-center">
+                    <span class="font-orbitron font-black text-sm">MENÚ ROG STRIX</span>
+                    <button @click="mobileMenuOpen = false"><i class="fas fa-times text-lg"></i></button>
                 </div>
-                <ul class="divide-y divide-gray-100">
-                    <li><a href="#" class="block px-4 py-3 text-sm font-semibold hover:bg-gray-50"><i class="fas fa-th-large mr-2 text-serco-red"></i> Categorías</a></li>
-                    <li><a href="#" class="block px-4 py-3 text-sm font-semibold hover:bg-gray-50"><i class="fas fa-laptop mr-2 text-serco-red"></i> Laptops</a></li>
-                    <li><a href="#" class="block px-4 py-3 text-sm font-semibold hover:bg-gray-50"><i class="fas fa-tags mr-2 text-serco-red"></i> Marcas</a></li>
-                    <li><a href="#" class="block px-4 py-3 text-sm font-semibold hover:bg-gray-50"><i class="fas fa-fire mr-2 text-serco-red"></i> Marcas Más Vendidas</a></li>
-                    <li><a href="#" class="block px-4 py-3 text-sm font-semibold hover:bg-gray-50"><i class="fas fa-file-alt mr-2 text-serco-red"></i> Términos</a></li>
-                    <li><a href="#" class="block px-4 py-3 text-sm font-semibold hover:bg-gray-50"><i class="fas fa-credit-card mr-2 text-serco-red"></i> Medios de Pago</a></li>
-                    <li><a href="#" class="block px-4 py-3 text-sm font-semibold hover:bg-gray-50"><i class="fas fa-map-marker-alt mr-2 text-serco-red"></i> Ubícanos</a></li>
-                    <li><a href="#" class="block px-4 py-3 text-sm font-semibold hover:bg-gray-50"><i class="fas fa-user mr-2 text-serco-red"></i> Iniciar Sesión</a></li>
-                    <li><a href="#" class="block px-4 py-3 text-sm font-semibold hover:bg-gray-50"><i class="fas fa-heart mr-2 text-serco-red"></i> Favoritos</a></li>
+                <div class="p-4 space-y-3">
+                    <div class="flex items-center justify-between pb-3 border-b border-[#20273B]">
+                        <span class="text-xs font-bold text-gray-400">Modo Oscuro</span>
+                        <button @click="toggleTheme()" class="p-2 rounded bg-[#181E2C] text-yellow-400">
+                            <i class="fas" :class="darkMode ? 'fa-sun' : 'fa-moon'"></i>
+                        </button>
+                    </div>
+                </div>
+                <ul class="divide-y divide-[#1B2234] text-xs font-gaming font-bold uppercase tracking-wider">
+                    <li><a href="#" class="block px-4 py-3 hover:text-serco-pink"><i class="fas fa-th-large mr-2 text-serco-pink"></i> Categorías</a></li>
+                    <li><a href="#" class="block px-4 py-3 hover:text-serco-blue"><i class="fas fa-laptop mr-2 text-serco-blue"></i> Laptops ROG & Gamer</a></li>
+                    <li><a href="#" class="block px-4 py-3 hover:text-serco-pink"><i class="fas fa-microchip mr-2 text-serco-red"></i> Componentes RTX 50</a></li>
+                    <li><a href="#" class="block px-4 py-3 hover:text-serco-blue"><i class="fas fa-desktop mr-2 text-serco-blue"></i> Monitores 360Hz</a></li>
+                    <li><a href="#" class="block px-4 py-3 hover:text-serco-pink"><i class="fas fa-credit-card mr-2 text-serco-pink"></i> Medios de Pago</a></li>
+                    <li><a href="#" class="block px-4 py-3 hover:text-serco-blue"><i class="fas fa-map-marker-alt mr-2 text-serco-blue"></i> Ubícanos</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <!-- ============================================================
-         SOCIAL MEDIA SIDEBAR (Left - Desktop only)
+         SOCIAL MEDIA SIDEBAR (ROG Strix Neon Glow)
          ============================================================ -->
-    <div class="fixed left-0 top-1/3 z-30 hidden lg:flex flex-col gap-0">
-        <a href="#" class="bg-blue-600 text-white w-8 h-8 flex items-center justify-center hover:brightness-110 transition text-sm"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" class="bg-pink-500 text-white w-8 h-8 flex items-center justify-center hover:brightness-110 transition text-sm"><i class="fab fa-instagram"></i></a>
-        <a href="#" class="bg-red-600 text-white w-8 h-8 flex items-center justify-center hover:brightness-110 transition text-sm"><i class="fab fa-youtube"></i></a>
+    <div class="fixed left-0 top-1/3 z-30 hidden lg:flex flex-col gap-1.5">
+        <a href="#" class="bg-[#1877F2] text-white w-9 h-9 flex items-center justify-center hover:translate-x-1.5 hover:shadow-[0_0_15px_rgba(24,119,242,0.8)] transition-all rounded-r-md text-sm"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="bg-gradient-to-tr from-yellow-500 via-serco-pink to-purple-600 text-white w-9 h-9 flex items-center justify-center hover:translate-x-1.5 hover:shadow-[0_0_15px_rgba(255,0,127,0.8)] transition-all rounded-r-md text-sm"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="bg-serco-red text-white w-9 h-9 flex items-center justify-center hover:translate-x-1.5 hover:shadow-[0_0_15px_rgba(255,0,63,0.8)] transition-all rounded-r-md text-sm"><i class="fab fa-youtube"></i></a>
+        <a href="#" class="bg-[#5865F2] text-white w-9 h-9 flex items-center justify-center hover:translate-x-1.5 hover:shadow-[0_0_15px_rgba(88,101,242,0.8)] transition-all rounded-r-md text-sm"><i class="fab fa-discord"></i></a>
     </div>
 
     <!-- ============================================================
-         MAIN CONTENT
+         MAIN CONTAINER
          ============================================================ -->
     <main class="max-w-7xl mx-auto px-4 py-6">
 
-        <!-- ======= HERO SECTION: Slider + Side Banner ======= -->
+        <!-- ======= HERO SECTION: ROG Strix Main Slider + Side Banner ======= -->
         <section class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6">
+            
             <!-- Main Hero Slider -->
-            <div class="lg:col-span-3 relative rounded-lg overflow-hidden bg-gradient-to-r from-indigo-900 to-blue-900 h-[220px] sm:h-[280px] md:h-[320px]">
+            <div class="lg:col-span-3 relative rounded-xl overflow-hidden bg-[#0A0D14] border border-gray-200 dark:border-[#20273C] h-[240px] sm:h-[300px] md:h-[350px] shadow-2xl group">
                 <template x-for="(slide, index) in heroSlides" :key="index">
                     <div x-show="currentSlide === index"
-                         x-transition:enter="transition ease-out duration-500"
-                         x-transition:enter-start="opacity-0"
-                         x-transition:enter-end="opacity-100"
-                         x-transition:leave="transition ease-in duration-300"
-                         x-transition:leave-start="opacity-100"
-                         x-transition:leave-end="opacity-0"
+                         x-transition:enter="transition ease-out duration-700"
+                         x-transition:enter-start="opacity-0 scale-105"
+                         x-transition:enter-end="opacity-100 scale-100"
+                         x-transition:leave="transition ease-in duration-400"
+                         x-transition:leave-start="opacity-100 scale-100"
+                         x-transition:leave-end="opacity-0 scale-95"
                          class="absolute inset-0">
                         <img :src="slide.image" :alt="slide.title" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent"></div>
-                        <div class="absolute bottom-6 left-6 md:left-10 text-white">
-                            <h2 class="text-2xl md:text-3xl font-bold mb-1" x-text="slide.title"></h2>
-                            <p class="text-sm md:text-base opacity-90" x-text="slide.subtitle"></p>
-                            <div class="flex gap-2 mt-3">
+                        <!-- Dark gradient overlay for high contrast & ROG vibe -->
+                        <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#07090E]/90 via-transparent to-transparent"></div>
+                        
+                        <!-- Content -->
+                        <div class="absolute bottom-6 left-6 md:left-10 right-6 text-white max-w-xl">
+                            <span class="inline-block text-[10px] font-orbitron font-bold tracking-widest text-serco-blue uppercase mb-2 bg-serco-blue/10 px-2.5 py-1 rounded border border-serco-blue/30 backdrop-blur-sm">
+                                <i class="fas fa-bolt text-serco-pink mr-1"></i> ROG STRIX EXCLUSIVE
+                            </span>
+                            <h2 class="text-2xl md:text-4xl font-orbitron font-black leading-tight tracking-wide text-white drop-shadow-md" x-text="slide.title"></h2>
+                            <p class="text-xs md:text-sm font-gaming text-gray-300 mt-1 drop-shadow" x-text="slide.subtitle"></p>
+                            
+                            <div class="flex flex-wrap gap-2 mt-4">
                                 <template x-for="tag in slide.tags" :key="tag">
-                                    <span class="bg-white/20 backdrop-blur-sm text-white text-[10px] px-3 py-1 rounded-full border border-white/30" x-text="tag"></span>
+                                    <span class="bg-[#141824]/80 backdrop-blur-md text-gray-200 text-[10px] font-bold px-3 py-1 rounded border border-serco-pink/30 shadow-sm" x-text="tag"></span>
                                 </template>
                             </div>
                         </div>
                     </div>
                 </template>
-                <!-- Slider Controls -->
-                <button @click="prevSlide()" class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white w-8 h-8 rounded-full flex items-center justify-center transition z-10">
-                    <i class="fas fa-chevron-left text-sm"></i>
+
+                <!-- Slider Navigation Buttons -->
+                <button @click="prevSlide()" class="absolute left-3 top-1/2 -translate-y-1/2 bg-[#0A0D14]/70 hover:bg-serco-pink text-white w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 border border-white/20 hover:border-serco-pink hover:shadow-rog-glow-pink z-10">
+                    <i class="fas fa-chevron-left text-xs"></i>
                 </button>
-                <button @click="nextSlide()" class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white w-8 h-8 rounded-full flex items-center justify-center transition z-10">
-                    <i class="fas fa-chevron-right text-sm"></i>
+                <button @click="nextSlide()" class="absolute right-3 top-1/2 -translate-y-1/2 bg-[#0A0D14]/70 hover:bg-serco-blue text-white w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 border border-white/20 hover:border-serco-blue hover:shadow-rog-glow-blue z-10">
+                    <i class="fas fa-chevron-right text-xs"></i>
                 </button>
+
                 <!-- Slide Indicators -->
                 <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
                     <template x-for="(slide, index) in heroSlides" :key="'dot-'+index">
                         <button @click="currentSlide = index" 
-                                :class="currentSlide === index ? 'bg-white w-6' : 'bg-white/50 w-2'" 
+                                :class="currentSlide === index ? 'bg-gradient-to-r from-serco-pink to-serco-blue w-7 shadow-rog-glow-pink' : 'bg-white/30 w-2.5'" 
                                 class="h-2 rounded-full transition-all duration-300"></button>
                     </template>
                 </div>
             </div>
 
-            <!-- Side Banner -->
-            <div class="hidden lg:block rounded-lg overflow-hidden relative bg-gradient-to-b from-gray-100 to-gray-200 h-[320px]">
-                <img src="https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=400&h=500&fit=crop" alt="NVIDIA Promo" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60"></div>
-                <div class="absolute top-4 left-4 right-4 text-white">
-                    <h3 class="text-lg font-extrabold leading-tight">Estudia.<br>Crea.<br>Compite.</h3>
-                    <p class="text-[11px] mt-2 opacity-90">La elección de los Estudiantes. Impulsado por IA de NVIDIA.</p>
-                    <button class="mt-3 bg-serco-red text-white text-xs font-bold px-4 py-2 rounded hover:bg-serco-dark-red transition">
-                        Comprar
+            <!-- Side Banner: ROG Strix AI & RTX 50 Series -->
+            <div class="hidden lg:block rounded-xl overflow-hidden relative bg-[#0D1017] border border-gray-200 dark:border-[#20273C] h-[350px] shadow-2xl group">
+                <img src="https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=400&h=600&fit=crop" alt="ROG Strix Hardware" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-b from-[#0A0D14]/40 via-[#0A0D14]/70 to-[#0A0D14]/95"></div>
+                
+                <div class="absolute top-5 left-5 right-5 text-white">
+                    <span class="text-[9px] font-orbitron font-bold uppercase tracking-widest text-serco-pink bg-serco-pink/10 px-2 py-0.5 rounded border border-serco-pink/30">
+                        FOR THOSE WHO DARE
+                    </span>
+                    <h3 class="text-xl font-orbitron font-black leading-tight mt-2 text-white">
+                        ESTUDIA.<br><span class="text-serco-pink">CREA.</span><br><span class="text-serco-blue">COMPITE.</span>
+                    </h3>
+                    <p class="text-[11px] font-gaming text-gray-300 mt-2">Impulsado por GeForce RTX™ 50 Series con DLSS 4 e IA Avanzada.</p>
+                    <button class="mt-4 w-full bg-gradient-to-r from-serco-red via-serco-pink to-serco-magenta text-white text-xs font-orbitron font-bold py-2.5 rounded-lg hover:shadow-rog-glow-pink transition-all">
+                        EXPLORAR ROG
                     </button>
                 </div>
-                <div class="absolute bottom-4 left-4">
-                    <span class="text-white text-[10px] font-semibold bg-serco-green/80 px-2 py-0.5 rounded"><i class="fas fa-bolt mr-1"></i> GeForce RTX</span>
+                <div class="absolute bottom-4 left-5 right-5 flex justify-between items-center text-[10px] text-gray-400 font-bold border-t border-[#20273C] pt-2">
+                    <span class="text-serco-blue"><i class="fas fa-microchip"></i> RTX 5080/5090</span>
+                    <span class="text-serco-pink"><i class="fas fa-bolt"></i> ROG Strix</span>
                 </div>
             </div>
         </section>
 
-        <!-- ======= PROMOTIONAL BANNERS (2 columns) ======= -->
+        <!-- ======= PROMOTIONAL BANNERS (ROG Strix & GeForce RTX 50) ======= -->
         <section class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-            <a href="#" class="block rounded-lg overflow-hidden relative h-[180px] md:h-[200px] group">
-                <img src="https://images.unsplash.com/photo-1591488320449-011701bb6704?w=600&h=300&fit=crop" alt="Gigabyte Promo" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                <div class="absolute inset-0 bg-gradient-to-r from-green-900/80 to-transparent"></div>
-                <div class="absolute bottom-5 left-5 text-white">
-                    <p class="text-xs uppercase tracking-wider opacity-80">Olvídate de recargos extra</p>
-                    <h3 class="text-xl font-extrabold leading-tight mt-1">¡GIGABYTE<br>LO CUBRE!</h3>
-                    <span class="inline-block mt-2 bg-serco-red text-white text-xs font-bold px-4 py-1.5 rounded hover:bg-serco-dark-red transition">Compra aquí</span>
+            <a href="#" class="block rounded-xl overflow-hidden relative h-[180px] md:h-[200px] group border border-gray-200 dark:border-[#20273C] shadow-lg">
+                <img src="https://images.unsplash.com/photo-1591488320449-011701bb6704?w=700&h=350&fit=crop" alt="Gigabyte AORUS Promo" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-r from-black/95 via-black/70 to-transparent"></div>
+                <div class="absolute inset-0 flex flex-col justify-center pl-6 md:pl-8 text-white max-w-md">
+                    <span class="text-[10px] font-orbitron font-bold text-serco-blue uppercase tracking-wider">GIGABYTE AORUS & GAMING</span>
+                    <h3 class="text-xl md:text-2xl font-orbitron font-black leading-tight mt-1">
+                        ¡CERO RECARGOS!<br><span class="text-serco-pink">GIGABYTE LO CUBRE</span>
+                    </h3>
+                    <span class="inline-flex items-center gap-2 mt-3 bg-serco-red text-white text-xs font-orbitron font-bold px-4 py-2 rounded-md w-fit hover:bg-serco-pink transition shadow-[0_0_15px_rgba(255,0,63,0.5)]">
+                        Comprar ahora <i class="fas fa-arrow-right text-[10px]"></i>
+                    </span>
                 </div>
             </a>
-            <a href="#" class="block rounded-lg overflow-hidden relative h-[180px] md:h-[200px] group">
-                <img src="https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=600&h=300&fit=crop" alt="AMD Promo" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent"></div>
-                <div class="absolute bottom-5 left-5 text-white">
-                    <div class="text-lg font-extrabold mb-1">AMD RYZEN / RADEON</div>
-                    <h3 class="text-xl font-extrabold leading-tight">ELIGE BIEN<br>CADA JUGADA CUENTA</h3>
-                    <span class="inline-block mt-2 bg-white text-serco-dark text-xs font-bold px-4 py-1.5 rounded hover:bg-gray-100 transition">Consigue el tuyo</span>
+            
+            <a href="#" class="block rounded-xl overflow-hidden relative h-[180px] md:h-[200px] group border border-gray-200 dark:border-[#20273C] shadow-lg">
+                <img src="https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=700&h=350&fit=crop" alt="AMD Ryzen Promo" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-r from-black/95 via-[#1A0A1E]/80 to-transparent"></div>
+                <div class="absolute inset-0 flex flex-col justify-center pl-6 md:pl-8 text-white max-w-md">
+                    <span class="text-[10px] font-orbitron font-bold text-serco-pink uppercase tracking-wider">AMD RYZEN™ 9000 SERIES</span>
+                    <h3 class="text-xl md:text-2xl font-orbitron font-black leading-tight mt-1">
+                        ELIGE BIEN.<br><span class="text-serco-blue">CADA JUGADA CUENTA</span>
+                    </h3>
+                    <span class="inline-flex items-center gap-2 mt-3 bg-gradient-to-r from-serco-pink to-serco-blue text-white text-xs font-orbitron font-bold px-4 py-2 rounded-md w-fit hover:brightness-110 transition shadow-[0_0_15px_rgba(255,0,127,0.5)]">
+                        Consigue el tuyo <i class="fas fa-arrow-right text-[10px]"></i>
+                    </span>
                 </div>
             </a>
         </section>
 
-        <!-- ======= MAIN CONTENT GRID: Left Sidebar + Products ======= -->
+        <!-- ======= MAIN LAYOUT: SIDEBAR + PRODUCT SECTIONS ======= -->
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
 
             <!-- === LEFT SIDEBAR === -->
             <aside class="hidden lg:block space-y-6">
-                <!-- Sidebar Banner: Gaming Monitor 2K -->
-                <div class="rounded-lg overflow-hidden relative h-[250px]">
-                    <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=350&fit=crop" alt="Monitor Gaming 2K" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/80"></div>
+                
+                <!-- Sidebar Promo Banner: ROG Gaming 2K 360Hz -->
+                <div class="rounded-xl overflow-hidden relative h-[270px] border border-serco-pink/40 shadow-xl group">
+                    <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=400&fit=crop" alt="ROG Swift 2K" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#07090E]/60 to-[#07090E]"></div>
                     <div class="absolute bottom-4 left-4 right-4 text-white text-center">
-                        <h4 class="font-extrabold text-lg">GAMING 2K</h4>
-                        <p class="text-[10px] mt-1 opacity-80">QHD, 370Hz, PIVOT & 0.03 ms</p>
-                        <button class="mt-2 bg-serco-green text-white text-xs font-bold px-4 py-1.5 rounded-full hover:bg-green-600 transition">Adquiérelo ahora</button>
+                        <span class="text-[9px] font-orbitron font-bold text-serco-blue uppercase">ROG SWIFT OLED</span>
+                        <h4 class="font-orbitron font-black text-lg text-white">GAMING 2K 360Hz</h4>
+                        <p class="text-[10px] font-gaming text-gray-300 mt-0.5">QHD, 0.03ms, G-SYNC & PIVOT</p>
+                        <button class="mt-2.5 w-full bg-gradient-to-r from-serco-pink to-serco-blue text-white text-xs font-orbitron font-bold py-1.5 rounded-md hover:shadow-rog-glow-pink transition">
+                            Adquiérelo ahora
+                        </button>
                     </div>
                 </div>
 
                 <!-- Nuestros Servicios -->
-                <div class="bg-white rounded-lg border border-gray-200">
-                    <div class="bg-serco-red text-white font-bold text-sm px-4 py-2.5 rounded-t-lg">NUESTROS SERVICIOS</div>
-                    <div class="divide-y divide-gray-100">
-                        <div class="flex items-start gap-3 p-4">
-                            <i class="fas fa-truck text-serco-red text-xl mt-0.5"></i>
+                <div class="bg-white dark:bg-rog-surface rounded-xl border border-gray-200 dark:border-rog-border shadow-lg overflow-hidden">
+                    <div class="bg-gradient-to-r from-serco-red via-serco-pink to-serco-blue text-white font-orbitron font-bold text-xs px-4 py-3 flex items-center justify-between">
+                        <span>NUESTROS SERVICIOS</span>
+                        <i class="fas fa-shield-halved text-xs"></i>
+                    </div>
+                    <div class="divide-y divide-gray-100 dark:divide-[#1E2538]">
+                        <div class="flex items-start gap-3.5 p-4 hover:bg-gray-50 dark:hover:bg-[#181E2E] transition">
+                            <div class="w-9 h-9 rounded-lg bg-serco-pink/10 border border-serco-pink/30 flex items-center justify-center text-serco-pink flex-shrink-0">
+                                <i class="fas fa-truck-fast text-sm"></i>
+                            </div>
                             <div>
-                                <h5 class="font-bold text-xs">Envíos A Todo El Perú</h5>
-                                <p class="text-[11px] text-gray-500 mt-0.5">Enviamos De Manera Rápida, Segura Y Eficiente...</p>
+                                <h5 class="font-bold text-xs text-gray-900 dark:text-white">Envíos A Todo El Perú</h5>
+                                <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">Enviamos De Manera Rápida, Segura Y Eficiente a nivel nacional.</p>
                             </div>
                         </div>
-                        <div class="flex items-start gap-3 p-4">
-                            <i class="fas fa-shield-alt text-serco-red text-xl mt-0.5"></i>
+                        <div class="flex items-start gap-3.5 p-4 hover:bg-gray-50 dark:hover:bg-[#181E2E] transition">
+                            <div class="w-9 h-9 rounded-lg bg-serco-blue/10 border border-serco-blue/30 flex items-center justify-center text-serco-blue flex-shrink-0">
+                                <i class="fas fa-lock text-sm"></i>
+                            </div>
                             <div>
-                                <h5 class="font-bold text-xs">Pago Seguro</h5>
-                                <p class="text-[11px] text-gray-500 mt-0.5">Paga A Través De Yape, Plin, Tarjetas De Crédito Y...</p>
+                                <h5 class="font-bold text-xs text-gray-900 dark:text-white">Pago 100% Seguro</h5>
+                                <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">Yape, Plin, Tarjetas Visa, Mastercard y Transferencias BCP/BBVA.</p>
                             </div>
                         </div>
-                        <div class="flex items-start gap-3 p-4">
-                            <i class="fas fa-headset text-serco-red text-xl mt-0.5"></i>
+                        <div class="flex items-start gap-3.5 p-4 hover:bg-gray-50 dark:hover:bg-[#181E2E] transition">
+                            <div class="w-9 h-9 rounded-lg bg-serco-red/10 border border-serco-red/30 flex items-center justify-center text-serco-red flex-shrink-0">
+                                <i class="fas fa-headset text-sm"></i>
+                            </div>
                             <div>
-                                <h5 class="font-bold text-xs">Ventas Online</h5>
-                                <p class="text-[11px] text-gray-500 mt-0.5">Cotiza Con Nuestros Asesores, Obt&eacute;n Las...</p>
+                                <h5 class="font-bold text-xs text-gray-900 dark:text-white">Asesoría Gaming Pro</h5>
+                                <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">Cotiza con expertos en hardware y ensamble de PC Gamer.</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Monitores Gaming Sidebar -->
-                <div class="bg-white rounded-lg border border-gray-200">
-                    <div class="bg-serco-red text-white font-bold text-sm px-4 py-2.5 rounded-t-lg">MONITORES GAMING</div>
-                    <div class="divide-y divide-gray-100">
+                <div class="bg-white dark:bg-rog-surface rounded-xl border border-gray-200 dark:border-rog-border shadow-lg overflow-hidden">
+                    <div class="bg-gradient-to-r from-serco-pink to-serco-blue text-white font-orbitron font-bold text-xs px-4 py-3 flex items-center justify-between">
+                        <span>MONITORES DESTACADOS</span>
+                        <i class="fas fa-desktop text-xs"></i>
+                    </div>
+                    <div class="divide-y divide-gray-100 dark:divide-[#1E2538]">
                         <template x-for="monitor in sidebarMonitors" :key="monitor.id">
-                            <div class="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer">
-                                <img :src="monitor.image" :alt="monitor.name" class="w-14 h-14 object-contain flex-shrink-0">
-                                <div class="min-w-0">
-                                    <div class="flex gap-0.5 mb-0.5">
-                                        <i class="fas fa-star star-empty text-[8px]"></i>
-                                        <i class="fas fa-star star-empty text-[8px]"></i>
-                                        <i class="fas fa-star star-empty text-[8px]"></i>
-                                        <i class="fas fa-star star-empty text-[8px]"></i>
-                                        <i class="fas fa-star star-empty text-[8px]"></i>
+                            <div @click="addToCart(monitor)" class="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-[#181E2E] cursor-pointer transition">
+                                <img :src="monitor.image" :alt="monitor.name" class="w-12 h-12 object-contain bg-gray-100 dark:bg-[#0E121C] rounded p-1 border border-gray-200 dark:border-gray-800 flex-shrink-0">
+                                <div class="min-w-0 flex-1">
+                                    <div class="flex gap-0.5 mb-1 text-yellow-400 text-[8px]">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                                     </div>
-                                    <p class="text-[11px] font-medium truncate" x-text="monitor.name"></p>
-                                    <p class="text-xs font-bold text-serco-red" x-text="'$ ' + monitor.priceUSD.toFixed(2) + ' (S/ ' + monitor.pricePEN.toFixed(2) + ')'"></p>
+                                    <p class="text-[11px] font-bold text-gray-800 dark:text-gray-200 truncate" x-text="monitor.name"></p>
+                                    <div class="flex items-center gap-1.5 mt-0.5">
+                                        <span class="text-xs font-bold text-serco-pink font-gaming" x-text="'S/ ' + monitor.pricePEN.toFixed(2)"></span>
+                                        <span class="text-[10px] text-serco-blue font-gaming" x-text="'$' + monitor.priceUSD.toFixed(2)"></span>
+                                    </div>
                                 </div>
                             </div>
                         </template>
                     </div>
                 </div>
 
-                <!-- Noticias -->
-                <div class="bg-white rounded-lg border border-gray-200">
-                    <div class="bg-serco-red text-white font-bold text-sm px-4 py-2.5 rounded-t-lg">NOTICIAS</div>
-                    <div class="p-3">
-                        <div class="rounded-lg overflow-hidden relative h-[150px]">
-                            <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=400&h=250&fit=crop" alt="Noticias" class="w-full h-full object-cover">
-                            <div class="absolute top-2 right-2 bg-serco-red text-white text-[10px] font-bold px-2 py-0.5 rounded">27</div>
+                <!-- Noticias & Eventos Gaming -->
+                <div class="bg-white dark:bg-rog-surface rounded-xl border border-gray-200 dark:border-rog-border shadow-lg overflow-hidden">
+                    <div class="bg-gradient-to-r from-serco-red to-serco-pink text-white font-orbitron font-bold text-xs px-4 py-3 flex items-center justify-between">
+                        <span>NOTICIAS ROG</span>
+                        <i class="fas fa-newspaper text-xs"></i>
+                    </div>
+                    <div class="p-3.5">
+                        <div class="rounded-lg overflow-hidden relative h-[140px] border border-gray-800">
+                            <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=400&h=250&fit=crop" alt="Noticias Gaming" class="w-full h-full object-cover">
+                            <div class="absolute top-2 right-2 bg-serco-pink text-white font-orbitron text-[10px] font-bold px-2 py-0.5 rounded shadow">
+                                27 JUL
+                            </div>
                         </div>
-                        <h5 class="font-bold text-xs mt-3 leading-tight">Registra Tu Compra Y Gana Un...</h5>
-                        <p class="text-[10px] text-gray-500 mt-1">Del 15 de julio al 29 de setiembre, cada compra desde S/100 en...</p>
+                        <h5 class="font-bold text-xs mt-3 text-gray-900 dark:text-white leading-tight">¡Gana un Setup ROG Strix Completo!</h5>
+                        <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-1">Por compras mayores a S/ 200 en productos ASUS ROG participa en el sorteo oficial.</p>
                     </div>
                 </div>
 
-                <!-- Ofertas Especiales Sidebar -->
-                <div class="bg-white rounded-lg border border-gray-200">
-                    <div class="bg-serco-red text-white font-bold text-sm px-4 py-2.5 rounded-t-lg">OFERTAS ESPECIALES</div>
-                    <div class="p-3 space-y-3">
-                        <template x-for="offer in sidebarOffers" :key="offer.id">
-                            <div class="flex items-center gap-3 hover:bg-gray-50 rounded p-1 cursor-pointer">
-                                <img :src="offer.image" :alt="offer.name" class="w-14 h-14 object-contain flex-shrink-0">
-                                <div class="min-w-0">
-                                    <p class="text-[10px] font-medium truncate" x-text="offer.name"></p>
-                                    <p class="text-xs font-bold text-serco-red" x-text="'S/ ' + offer.pricePEN.toFixed(2)"></p>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                </div>
             </aside>
 
-            <!-- === MAIN PRODUCT AREA (Right 3 columns) === -->
+            <!-- === MAIN PRODUCT AREA (Right 3 Columns) === -->
             <div class="lg:col-span-3 space-y-10">
 
                 <!-- ======= NUEVOS PRODUCTOS ======= -->
                 <section>
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-lg font-extrabold text-serco-dark uppercase tracking-wide">NUEVOS PRODUCTOS</h2>
-                        <div class="flex gap-1">
-                            <button @click="scrollCarousel('nuevos', -1)" class="w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center hover:bg-gray-100 transition text-gray-500"><i class="fas fa-chevron-left text-xs"></i></button>
-                            <button @click="scrollCarousel('nuevos', 1)" class="w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center hover:bg-gray-100 transition text-gray-500"><i class="fas fa-chevron-right text-xs"></i></button>
+                    <div class="flex items-center justify-between mb-4 border-b border-gray-200 dark:border-[#20273C] pb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-serco-pink shadow-rog-glow-pink"></span>
+                            <h2 class="text-base md:text-lg font-orbitron font-black text-gray-900 dark:text-white uppercase tracking-wider">
+                                NUEVOS INGRESOS
+                            </h2>
+                        </div>
+                        <div class="flex gap-1.5">
+                            <button @click="scrollCarousel('nuevos', -1)" class="w-8 h-8 border border-gray-300 dark:border-[#28334E] rounded-lg flex items-center justify-center hover:bg-serco-pink hover:text-white transition text-gray-500 dark:text-gray-300"><i class="fas fa-chevron-left text-xs"></i></button>
+                            <button @click="scrollCarousel('nuevos', 1)" class="w-8 h-8 border border-gray-300 dark:border-[#28334E] rounded-lg flex items-center justify-center hover:bg-serco-blue hover:text-gray-950 transition text-gray-500 dark:text-gray-300"><i class="fas fa-chevron-right text-xs"></i></button>
                         </div>
                     </div>
-                    <div id="carousel-nuevos" class="carousel-scroll flex gap-4 overflow-x-auto pb-2">
+
+                    <div id="carousel-nuevos" class="carousel-scroll flex gap-4 overflow-x-auto pb-3">
                         <template x-for="product in newProducts" :key="product.id">
-                            <div class="product-card bg-white border border-gray-200 rounded-lg p-3 min-w-[200px] w-[200px] flex-shrink-0 relative">
-                                <!-- Badge -->
-                                <span class="absolute top-2 right-2 bg-serco-green text-white text-[9px] font-bold px-2 py-0.5 rounded z-10">Nuevo</span>
-                                <!-- Product Image -->
-                                <div class="h-[140px] flex items-center justify-center mb-3">
-                                    <img :src="product.image" :alt="product.name" class="max-h-full max-w-full object-contain">
-                                </div>
-                                <!-- Brand logo placeholder -->
-                                <div class="border-t border-gray-100 pt-2">
-                                    <p class="text-[10px] text-gray-400 uppercase font-semibold mb-1" x-text="product.brand"></p>
-                                </div>
-                                <!-- Stars -->
-                                <div class="flex gap-0.5 mb-1">
-                                    <i class="fas fa-star star-empty text-[10px]"></i>
-                                    <i class="fas fa-star star-empty text-[10px]"></i>
-                                    <i class="fas fa-star star-empty text-[10px]"></i>
-                                    <i class="fas fa-star star-empty text-[10px]"></i>
-                                    <i class="fas fa-star star-empty text-[10px]"></i>
-                                </div>
-                                <!-- Name -->
-                                <h3 class="text-xs font-semibold leading-tight mb-2 min-h-[32px] line-clamp-2" x-text="product.name"></h3>
-                                <!-- Stock Info -->
-                                <p class="text-[10px] text-gray-500"><span class="font-semibold">Stock:</span> <span x-text="product.stock > 0 ? 'Mayor a 10' : 'Agotado'"></span></p>
-                                <p class="text-[10px] text-gray-500 mb-2"><span class="font-semibold">Referencia:</span> <span x-text="product.ref"></span></p>
-                                <!-- Price -->
-                                <div class="flex items-baseline gap-2">
-                                    <span class="text-sm font-bold text-serco-dark" x-text="'$ ' + product.priceUSD.toFixed(2)"></span>
-                                    <span class="text-xs text-serco-red font-semibold" x-text="'(S/ ' + product.pricePEN.toFixed(2) + ')'"></span>
-                                </div>
-                                <!-- Add to cart -->
-                                <button @click="addToCart(product)" 
-                                        class="w-full mt-3 bg-serco-red text-white text-xs font-bold py-2 rounded hover:bg-serco-dark-red transition flex items-center justify-center gap-2">
-                                    <i class="fas fa-cart-plus"></i> Añadir
-                                </button>
-                            </div>
-                        </template>
-                    </div>
-                </section>
-
-                <!-- ======= INTEL BANNER ======= -->
-                <section>
-                    <a href="#" class="block rounded-lg overflow-hidden relative h-[120px] md:h-[150px] group">
-                        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&h=300&fit=crop" alt="Intel Promo" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-blue-600/70"></div>
-                        <div class="absolute inset-0 flex items-center justify-between px-6 md:px-12">
-                            <div class="text-white">
-                                <p class="text-xs opacity-80">Desbloquea una versión</p>
-                                <h3 class="text-xl md:text-2xl font-extrabold">más rápida y poderosa</h3>
-                                <p class="text-lg font-bold">de ti mismo.</p>
-                                <p class="text-[10px] opacity-60 mt-1">That's the power of Intel Inside®</p>
-                            </div>
-                            <div class="hidden md:flex items-center gap-6 text-white">
-                                <div class="text-center">
-                                    <div class="text-2xl font-extrabold">Intel</div>
-                                    <div class="text-[10px] opacity-80">Core™ Ultra 9</div>
-                                </div>
-                                <div class="text-center">
-                                    <div class="text-2xl font-extrabold">Intel</div>
-                                    <div class="text-[10px] opacity-80">Core™ Ultra 7</div>
-                                </div>
-                                <div class="text-center">
-                                    <div class="text-2xl font-extrabold">Intel</div>
-                                    <div class="text-[10px] opacity-80">Core™ Ultra 5</div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </section>
-
-                <!-- ======= TARJETAS DE VIDEO NVIDIA ======= -->
-                <section>
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-lg font-extrabold text-serco-dark uppercase tracking-wide">TARJETAS DE VIDEO NVIDIA</h2>
-                        <div class="flex gap-1">
-                            <button @click="scrollCarousel('nvidia', -1)" class="w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center hover:bg-gray-100 transition text-gray-500"><i class="fas fa-chevron-left text-xs"></i></button>
-                            <button @click="scrollCarousel('nvidia', 1)" class="w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center hover:bg-gray-100 transition text-gray-500"><i class="fas fa-chevron-right text-xs"></i></button>
-                        </div>
-                    </div>
-                    <!-- NVIDIA Tabs -->
-                    <div class="flex gap-3 mb-4 flex-wrap">
-                        <button @click="nvidiaTab = 'rtx'" :class="nvidiaTab === 'rtx' ? 'bg-serco-green text-white' : 'bg-gray-100 text-gray-600'" class="px-4 py-2 rounded-full text-xs font-bold transition flex items-center gap-2">
-                            <i class="fas fa-bolt"></i> Video NVIDIA GeForce RTX
-                        </button>
-                        <button @click="nvidiaTab = 'gtx'" :class="nvidiaTab === 'gtx' ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-600'" class="px-4 py-2 rounded-full text-xs font-bold transition flex items-center gap-2">
-                            <i class="fas fa-microchip"></i> Video NVIDIA GeForce GTX
-                        </button>
-                        <button @click="nvidiaTab = 'quadro'" :class="nvidiaTab === 'quadro' ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-600'" class="px-4 py-2 rounded-full text-xs font-bold transition flex items-center gap-2">
-                            <i class="fas fa-desktop"></i> Video NVIDIA Quadro
-                        </button>
-                    </div>
-                    <div id="carousel-nvidia" class="carousel-scroll flex gap-4 overflow-x-auto pb-2">
-                        <template x-for="product in nvidiaProducts" :key="product.id">
-                            <div class="product-card bg-white border border-gray-200 rounded-lg p-3 min-w-[220px] w-[220px] flex-shrink-0 relative">
-                                <span x-show="product.badge" class="absolute top-2 left-2 text-white text-[9px] font-bold px-2 py-0.5 rounded z-10"
-                                      :class="product.badge === '¡Oferta!' ? 'bg-serco-red' : 'bg-serco-green'"
-                                      x-text="product.badge"></span>
-                                <div class="flex items-center justify-center mb-2">
-                                    <span class="text-[10px] font-bold text-serco-red" x-text="product.brand"></span>
-                                </div>
-                                <div class="h-[140px] flex items-center justify-center mb-3">
-                                    <img :src="product.image" :alt="product.name" class="max-h-full max-w-full object-contain">
-                                </div>
-                                <div class="border-t border-gray-100 pt-2">
-                                    <div class="flex gap-0.5 mb-1">
-                                        <i class="fas fa-star star-empty text-[10px]"></i><i class="fas fa-star star-empty text-[10px]"></i><i class="fas fa-star star-empty text-[10px]"></i><i class="fas fa-star star-empty text-[10px]"></i><i class="fas fa-star star-empty text-[10px]"></i>
+                            <div class="product-card bg-white dark:bg-rog-card border border-gray-200 dark:border-rog-border rounded-xl p-3.5 min-w-[220px] w-[220px] flex-shrink-0 flex flex-col justify-between shadow-md">
+                                <div>
+                                    <!-- Badge -->
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-[9px] font-orbitron font-bold uppercase text-serco-blue" x-text="product.brand"></span>
+                                        <span class="bg-serco-pink text-white text-[9px] font-orbitron font-bold px-2 py-0.5 rounded shadow-[0_0_10px_rgba(255,0,127,0.5)]">Nuevo</span>
                                     </div>
-                                    <h3 class="text-xs font-semibold leading-tight mb-2 min-h-[32px] line-clamp-2" x-text="product.name"></h3>
-                                    <p class="text-[10px] text-gray-500"><span class="font-semibold">Stock:</span> <span x-text="product.stock > 0 ? 'Mayor a 10' : product.stock"></span></p>
-                                    <p class="text-[10px] text-gray-500 mb-2"><span class="font-semibold">Referencia:</span> <span x-text="product.ref"></span></p>
-                                    <span class="text-sm font-bold text-serco-dark" x-text="'$ ' + product.priceUSD.toFixed(2)"></span>
-                                    <span class="text-xs text-serco-red font-semibold ml-1" x-text="'(S/ ' + product.pricePEN.toFixed(2) + ')'"></span>
+                                    
+                                    <!-- Image -->
+                                    <div class="h-[140px] flex items-center justify-center bg-gray-50 dark:bg-[#0E121B] rounded-lg p-2 mb-3 border border-gray-100 dark:border-gray-800/80">
+                                        <img :src="product.image" :alt="product.name" class="max-h-full max-w-full object-contain">
+                                    </div>
+                                    
+                                    <!-- Stars -->
+                                    <div class="flex gap-0.5 mb-1.5 text-yellow-400 text-[9px]">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    
+                                    <!-- Name -->
+                                    <h3 class="text-xs font-bold leading-snug mb-2 min-h-[34px] line-clamp-2 text-gray-900 dark:text-gray-100" x-text="product.name"></h3>
+                                    
+                                    <!-- Stock info -->
+                                    <p class="text-[10px] text-gray-500 dark:text-gray-400"><span class="font-semibold text-gray-700 dark:text-gray-300">Stock:</span> <span class="text-serco-blue font-bold" x-text="product.stock > 0 ? 'Mayor a 10' : 'Agotado'"></span></p>
+                                    <p class="text-[10px] text-gray-500 dark:text-gray-400 mb-2"><span class="font-semibold text-gray-700 dark:text-gray-300">Ref:</span> <span x-text="product.ref"></span></p>
                                 </div>
-                                <button @click="addToCart(product)" class="w-full mt-3 bg-serco-red text-white text-xs font-bold py-2 rounded hover:bg-serco-dark-red transition flex items-center justify-center gap-2">
-                                    <i class="fas fa-cart-plus"></i> Añadir
-                                </button>
+                                
+                                <div>
+                                    <!-- Price -->
+                                    <div class="border-t border-gray-100 dark:border-[#20283C] pt-2.5 flex items-baseline justify-between">
+                                        <span class="text-sm font-black text-serco-pink font-gaming" x-text="'S/ ' + product.pricePEN.toFixed(2)"></span>
+                                        <span class="text-xs text-serco-blue font-gaming font-bold" x-text="'$' + product.priceUSD.toFixed(2)"></span>
+                                    </div>
+                                    <!-- Button -->
+                                    <button @click="addToCart(product)" 
+                                            class="w-full mt-2.5 bg-gradient-to-r from-serco-red to-serco-pink text-white text-xs font-orbitron font-bold py-2 rounded-lg hover:shadow-rog-glow-pink transition flex items-center justify-center gap-1.5">
+                                        <i class="fas fa-cart-plus text-xs"></i> AÑADIR
+                                    </button>
+                                </div>
                             </div>
                         </template>
                     </div>
                 </section>
 
-                <!-- ======= PROMOTIONAL BANNERS MID ======= -->
-                <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <a href="#" class="block rounded-lg overflow-hidden relative h-[160px] group">
-                        <img src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=600&h=300&fit=crop" alt="Periféricos" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        <div class="absolute inset-0 bg-gradient-to-r from-emerald-900/80 to-transparent"></div>
-                        <div class="absolute inset-0 flex flex-col justify-center pl-6 text-white">
-                            <p class="text-xs opacity-80">Juega como todo un PRO.</p>
-                            <h3 class="text-xl font-extrabold mt-1">Periféricos</h3>
-                            <span class="inline-block mt-3 bg-white text-serco-dark text-xs font-bold px-4 py-1.5 rounded w-fit hover:bg-gray-100 transition">Compra aquí &rarr;</span>
-                        </div>
-                    </a>
-                    <a href="#" class="block rounded-lg overflow-hidden relative h-[160px] group">
-                        <img src="https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=600&h=300&fit=crop" alt="Estabilizadores" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        <div class="absolute inset-0 bg-gradient-to-r from-gray-900/80 to-transparent"></div>
-                        <div class="absolute inset-0 flex flex-col justify-center pl-6 text-white">
-                            <p class="text-xs opacity-80">Brinda protección a tu equipo</p>
-                            <h3 class="text-xl font-extrabold mt-1 underline">Estabilizadores/UPS</h3>
-                            <span class="inline-block mt-3 bg-white text-serco-dark text-xs font-bold px-4 py-1.5 rounded w-fit hover:bg-gray-100 transition">Compra aquí &rarr;</span>
+                <!-- ======= INTEL CORE ULTRA BANNER ======= -->
+                <section>
+                    <a href="#" class="block rounded-xl overflow-hidden relative h-[130px] md:h-[160px] group border border-serco-blue/30 shadow-xl">
+                        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&h=300&fit=crop" alt="Intel Core Ultra Promo" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-r from-[#040B18]/95 via-[#0A1A3A]/85 to-transparent"></div>
+                        <div class="absolute inset-0 flex items-center justify-between px-6 md:px-10">
+                            <div class="text-white">
+                                <span class="text-[9px] font-orbitron font-bold text-serco-blue uppercase tracking-widest bg-serco-blue/20 px-2 py-0.5 rounded border border-serco-blue/40">
+                                    INTEL® CORE™ ULTRA SERIE 2
+                                </span>
+                                <h3 class="text-lg md:text-2xl font-orbitron font-black mt-1">
+                                    MÁS RÁPIDA, MÁS PODEROSA
+                                </h3>
+                                <p class="text-xs font-gaming text-gray-300">Impulsado por NPU integrada para Inteligencia Artificial de próxima generación.</p>
+                            </div>
+                            <div class="hidden md:flex items-center gap-6 text-white border-l border-serco-blue/30 pl-6">
+                                <div class="text-center">
+                                    <div class="text-xl font-orbitron font-black text-serco-blue">ULTRA 9</div>
+                                    <div class="text-[9px] text-gray-400">Extreme Gaming</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-xl font-orbitron font-black text-serco-pink">ULTRA 7</div>
+                                    <div class="text-[9px] text-gray-400">Performance Pro</div>
+                                </div>
+                            </div>
                         </div>
                     </a>
                 </section>
 
-                <!-- ======= OFERTAS ESPECIALES (Flash Deals with Countdown) ======= -->
+                <!-- ======= TARJETAS DE VIDEO NVIDIA GEFORCE RTX 50 & 40 ======= -->
                 <section>
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center gap-4">
-                            <h2 class="text-lg font-extrabold text-serco-dark uppercase tracking-wide">OFERTAS ESPECIALES</h2>
-                            <!-- Countdown Timer -->
-                            <div class="hidden md:flex items-center gap-2 text-xs">
-                                <span class="text-gray-500"><i class="fas fa-clock mr-1"></i> Termina en:</span>
-                                <div class="flex gap-1">
-                                    <span class="bg-serco-dark text-white px-2 py-1 rounded font-mono font-bold" x-text="String(countdown.hours).padStart(2,'0')"></span>
-                                    <span class="text-serco-dark font-bold">:</span>
-                                    <span class="bg-serco-dark text-white px-2 py-1 rounded font-mono font-bold" x-text="String(countdown.minutes).padStart(2,'0')"></span>
-                                    <span class="text-serco-dark font-bold">:</span>
-                                    <span class="bg-serco-red text-white px-2 py-1 rounded font-mono font-bold" x-text="String(countdown.seconds).padStart(2,'0')"></span>
-                                </div>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-gray-200 dark:border-[#20273C] pb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-serco-blue shadow-rog-glow-blue"></span>
+                            <h2 class="text-base md:text-lg font-orbitron font-black text-gray-900 dark:text-white uppercase tracking-wider">
+                                TARJETAS DE VIDEO NVIDIA
+                            </h2>
+                        </div>
+                        
+                        <!-- Tabs -->
+                        <div class="flex items-center gap-2">
+                            <button @click="nvidiaTab = 'rtx'" 
+                                    :class="nvidiaTab === 'rtx' ? 'bg-gradient-to-r from-serco-red to-serco-pink text-white shadow-rog-glow-pink' : 'bg-gray-100 dark:bg-[#181E2C] text-gray-400 border border-gray-300 dark:border-[#252E46]'" 
+                                    class="px-3 py-1.5 rounded-lg text-xs font-orbitron font-bold transition flex items-center gap-1.5">
+                                <i class="fas fa-bolt text-[10px]"></i> RTX 50 / 40
+                            </button>
+                            <button @click="nvidiaTab = 'rog'" 
+                                    :class="nvidiaTab === 'rog' ? 'bg-gradient-to-r from-serco-pink to-serco-blue text-white shadow-rog-glow-blue' : 'bg-gray-100 dark:bg-[#181E2C] text-gray-400 border border-gray-300 dark:border-[#252E46]'" 
+                                    class="px-3 py-1.5 rounded-lg text-xs font-orbitron font-bold transition flex items-center gap-1.5">
+                                <i class="fas fa-shield-alt text-[10px]"></i> ROG Strix
+                            </button>
+                            <div class="flex gap-1 ml-2">
+                                <button @click="scrollCarousel('nvidia', -1)" class="w-7 h-7 border border-gray-300 dark:border-[#28334E] rounded-lg flex items-center justify-center hover:bg-serco-pink hover:text-white transition text-gray-400"><i class="fas fa-chevron-left text-[10px]"></i></button>
+                                <button @click="scrollCarousel('nvidia', 1)" class="w-7 h-7 border border-gray-300 dark:border-[#28334E] rounded-lg flex items-center justify-center hover:bg-serco-blue hover:text-gray-950 transition text-gray-400"><i class="fas fa-chevron-right text-[10px]"></i></button>
                             </div>
                         </div>
-                        <div class="flex gap-1">
-                            <button @click="scrollCarousel('ofertas', -1)" class="w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center hover:bg-gray-100 transition text-gray-500"><i class="fas fa-chevron-left text-xs"></i></button>
-                            <button @click="scrollCarousel('ofertas', 1)" class="w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center hover:bg-gray-100 transition text-gray-500"><i class="fas fa-chevron-right text-xs"></i></button>
+                    </div>
+
+                    <div id="carousel-nvidia" class="carousel-scroll flex gap-4 overflow-x-auto pb-3">
+                        <template x-for="product in nvidiaProducts" :key="product.id">
+                            <div class="product-card bg-white dark:bg-rog-card border border-gray-200 dark:border-rog-border rounded-xl p-3.5 min-w-[230px] w-[230px] flex-shrink-0 flex flex-col justify-between shadow-md">
+                                <div>
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-[9px] font-orbitron font-bold text-serco-pink" x-text="product.brand"></span>
+                                        <span x-show="product.badge" 
+                                              class="text-white text-[9px] font-orbitron font-bold px-2 py-0.5 rounded"
+                                              :class="product.badge === '¡Oferta!' ? 'bg-serco-red shadow-[0_0_10px_rgba(255,0,63,0.6)]' : 'bg-serco-blue text-gray-950 shadow-[0_0_10px_rgba(0,240,255,0.6)]'"
+                                              x-text="product.badge"></span>
+                                    </div>
+                                    
+                                    <div class="h-[140px] flex items-center justify-center bg-gray-50 dark:bg-[#0E121B] rounded-lg p-2 mb-3 border border-gray-100 dark:border-gray-800/80">
+                                        <img :src="product.image" :alt="product.name" class="max-h-full max-w-full object-contain">
+                                    </div>
+                                    
+                                    <div class="flex gap-0.5 mb-1.5 text-yellow-400 text-[9px]">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    </div>
+                                    
+                                    <h3 class="text-xs font-bold leading-snug mb-2 min-h-[34px] line-clamp-2 text-gray-900 dark:text-gray-100" x-text="product.name"></h3>
+                                    
+                                    <p class="text-[10px] text-gray-500 dark:text-gray-400"><span class="font-semibold text-gray-700 dark:text-gray-300">Stock:</span> <span class="text-serco-blue font-bold" x-text="product.stock > 0 ? product.stock + ' disp.' : 'Agotado'"></span></p>
+                                    <p class="text-[10px] text-gray-500 dark:text-gray-400 mb-2"><span class="font-semibold text-gray-700 dark:text-gray-300">Ref:</span> <span x-text="product.ref"></span></p>
+                                </div>
+                                
+                                <div>
+                                    <div class="border-t border-gray-100 dark:border-[#20283C] pt-2.5 flex items-baseline justify-between">
+                                        <span class="text-sm font-black text-serco-pink font-gaming" x-text="'S/ ' + product.pricePEN.toFixed(2)"></span>
+                                        <span class="text-xs text-serco-blue font-gaming font-bold" x-text="'$' + product.priceUSD.toFixed(2)"></span>
+                                    </div>
+                                    
+                                    <button @click="addToCart(product)" 
+                                            class="w-full mt-2.5 bg-gradient-to-r from-serco-pink to-serco-blue text-white text-xs font-orbitron font-bold py-2 rounded-lg hover:shadow-rog-glow-blue transition flex items-center justify-center gap-1.5">
+                                        <i class="fas fa-cart-plus text-xs"></i> AÑADIR
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </section>
+
+                <!-- ======= MID PROMO BANNERS ======= -->
+                <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <a href="#" class="block rounded-xl overflow-hidden relative h-[150px] group border border-serco-pink/30 shadow-lg">
+                        <img src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=600&h=300&fit=crop" alt="Periféricos ROG" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-[#1F0A1A]/80 to-transparent"></div>
+                        <div class="absolute inset-0 flex flex-col justify-center pl-6 text-white">
+                            <span class="text-[10px] font-orbitron font-bold text-serco-pink uppercase">PERIFÉRICOS RGB AURA SYNC</span>
+                            <h3 class="text-lg font-orbitron font-black mt-0.5">TECLADOS & MOUSE PRO</h3>
+                            <span class="inline-flex items-center gap-1.5 mt-2 text-xs font-bold text-serco-blue hover:text-serco-pink transition">
+                                Ver catálogo <i class="fas fa-chevron-right text-[10px]"></i>
+                            </span>
+                        </div>
+                    </a>
+                    
+                    <a href="#" class="block rounded-xl overflow-hidden relative h-[150px] group border border-serco-blue/30 shadow-lg">
+                        <img src="https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=600&h=300&fit=crop" alt="Fuentes ROG Thor" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-[#0A1624]/80 to-transparent"></div>
+                        <div class="absolute inset-0 flex flex-col justify-center pl-6 text-white">
+                            <span class="text-[10px] font-orbitron font-bold text-serco-blue uppercase">PROTECCIÓN & ENERGÍA</span>
+                            <h3 class="text-lg font-orbitron font-black mt-0.5">FUENTES 850W+ & UPS</h3>
+                            <span class="inline-flex items-center gap-1.5 mt-2 text-xs font-bold text-serco-pink hover:text-serco-blue transition">
+                                Ver catálogo <i class="fas fa-chevron-right text-[10px]"></i>
+                            </span>
+                        </div>
+                    </a>
+                </section>
+
+                <!-- ======= OFERTAS ESPECIALES (FLASH DEALS CON COUNTDOWN CYBERPUNK) ======= -->
+                <section class="bg-gradient-to-br from-serco-red/10 via-serco-pink/5 to-serco-blue/10 dark:from-[#150A1E]/80 dark:to-[#0A1224]/80 border border-serco-pink/30 rounded-2xl p-4 md:p-6 shadow-2xl">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 border-b border-serco-pink/20 pb-4">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-fire text-serco-red text-lg animate-bounce"></i>
+                                <h2 class="text-lg md:text-xl font-orbitron font-black text-gray-900 dark:text-white uppercase tracking-wider">
+                                    OFERTAS FLASH ROG
+                                </h2>
+                            </div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 font-gaming">Precios exclusivos por tiempo limitado o agotar stock.</p>
+                        </div>
+                        
+                        <!-- Neon Cyber Countdown Timer -->
+                        <div class="flex items-center gap-2 bg-[#0A0D14] border border-serco-pink/40 px-3.5 py-2 rounded-xl shadow-rog-glow-pink">
+                            <span class="text-[10px] font-orbitron font-bold text-serco-pink uppercase mr-1">Termina en:</span>
+                            <div class="flex items-center gap-1 font-orbitron font-black text-xs">
+                                <span class="bg-[#181E2C] text-white px-2 py-1 rounded border border-gray-700" x-text="String(countdown.hours).padStart(2,'0')"></span>
+                                <span class="text-serco-pink font-bold">:</span>
+                                <span class="bg-[#181E2C] text-white px-2 py-1 rounded border border-gray-700" x-text="String(countdown.minutes).padStart(2,'0')"></span>
+                                <span class="text-serco-pink font-bold">:</span>
+                                <span class="bg-serco-pink text-white px-2 py-1 rounded shadow-[0_0_10px_rgba(255,0,127,0.7)]" x-text="String(countdown.seconds).padStart(2,'0')"></span>
+                            </div>
                         </div>
                     </div>
+
                     <div id="carousel-ofertas" class="carousel-scroll flex gap-4 overflow-x-auto pb-2">
                         <template x-for="product in flashDeals" :key="product.id">
-                            <div class="product-card bg-white border border-gray-200 rounded-lg p-3 min-w-[220px] w-[220px] flex-shrink-0 relative">
-                                <span class="absolute top-2 left-2 bg-serco-red text-white text-[9px] font-bold px-2 py-0.5 rounded z-10">¡Oferta!</span>
-                                <span class="absolute top-2 right-2 bg-serco-orange text-white text-[9px] font-bold px-2 py-0.5 rounded z-10" x-text="'-' + product.discount + '%'"></span>
-                                <div class="h-[150px] flex items-center justify-center mb-3">
-                                    <img :src="product.image" :alt="product.name" class="max-h-full max-w-full object-contain">
+                            <div class="product-card bg-white dark:bg-rog-card border border-serco-pink/30 rounded-xl p-3.5 min-w-[240px] w-[240px] flex-shrink-0 flex flex-col justify-between shadow-xl relative overflow-hidden">
+                                <div class="absolute top-0 right-0 w-16 h-16 pointer-events-none">
+                                    <div class="bg-serco-pink text-white font-orbitron font-black text-[9px] py-1 text-center rotate-45 transform translate-x-4 -translate-y-1 shadow-md" x-text="'-' + product.discount + '%'"></div>
                                 </div>
-                                <!-- Progress bar (stock level) -->
-                                <div class="w-full bg-gray-200 rounded-full h-1.5 mb-3">
-                                    <div class="bg-serco-red h-1.5 rounded-full transition-all" :style="'width: ' + (product.stockPercent || 70) + '%'"></div>
-                                </div>
-                                <h3 class="text-xs font-semibold leading-tight mb-2 min-h-[40px] line-clamp-3" x-text="product.name"></h3>
-                                <p class="text-[10px] text-gray-500"><span class="font-semibold">Stock:</span> <span x-text="product.stock"></span></p>
-                                <p class="text-[10px] text-gray-500 mb-2"><span class="font-semibold">Referencia:</span> <span x-text="product.ref"></span></p>
+
                                 <div>
-                                    <span class="text-sm font-bold text-serco-dark" x-text="'$ ' + product.priceUSD.toFixed(2)"></span>
-                                    <span class="text-xs text-serco-red font-semibold ml-1" x-text="'(S/ ' + product.pricePEN.toFixed(2) + ')'"></span>
+                                    <span class="bg-serco-red text-white text-[9px] font-orbitron font-bold px-2 py-0.5 rounded shadow">
+                                        OFERTA TOP
+                                    </span>
+                                    
+                                    <div class="h-[150px] flex items-center justify-center bg-gray-50 dark:bg-[#0E121B] rounded-lg p-2 my-3 border border-gray-100 dark:border-gray-800">
+                                        <img :src="product.image" :alt="product.name" class="max-h-full max-w-full object-contain">
+                                    </div>
+                                    
+                                    <!-- Stock Progress Bar (Neon Gradient) -->
+                                    <div class="space-y-1 mb-2">
+                                        <div class="flex justify-between text-[9px] font-gaming text-gray-400">
+                                            <span>Disponibles: <strong class="text-serco-blue" x-text="product.stock"></strong></span>
+                                            <span>Vendidos: <strong class="text-serco-pink" x-text="product.stockPercent + '%'"></strong></span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-1.5 overflow-hidden">
+                                            <div class="bg-gradient-to-r from-serco-red via-serco-pink to-serco-blue h-full rounded-full" :style="'width: ' + product.stockPercent + '%'"></div>
+                                        </div>
+                                    </div>
+
+                                    <h3 class="text-xs font-bold leading-snug mb-2 min-h-[38px] line-clamp-3 text-gray-900 dark:text-gray-100" x-text="product.name"></h3>
                                 </div>
-                                <div x-show="product.originalPriceUSD">
-                                    <span class="text-[11px] text-gray-400 line-through" x-text="'$ ' + (product.originalPriceUSD || 0).toFixed(2)"></span>
-                                    <span class="text-[10px] text-serco-green font-bold ml-1" x-text="'Ahorras $ ' + ((product.originalPriceUSD || 0) - product.priceUSD).toFixed(2)"></span>
+                                
+                                <div>
+                                    <div class="border-t border-gray-100 dark:border-[#20283C] pt-2">
+                                        <div class="flex items-baseline gap-2">
+                                            <span class="text-base font-black text-serco-pink font-gaming" x-text="'S/ ' + product.pricePEN.toFixed(2)"></span>
+                                            <span class="text-xs text-serco-blue font-gaming font-bold" x-text="'$' + product.priceUSD.toFixed(2)"></span>
+                                        </div>
+                                        <div class="flex items-center gap-2 text-[10px] text-gray-400">
+                                            <span class="line-through" x-text="'$' + product.originalPriceUSD.toFixed(2)"></span>
+                                            <span class="text-serco-blue font-bold">Ahorras $<span x-text="(product.originalPriceUSD - product.priceUSD).toFixed(0)"></span></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <button @click="addToCart(product)" 
+                                            class="w-full mt-2.5 bg-gradient-to-r from-serco-red via-serco-pink to-serco-magenta text-white text-xs font-orbitron font-bold py-2 rounded-lg hover:shadow-rog-glow-pink transition flex items-center justify-center gap-1.5">
+                                        <i class="fas fa-cart-shopping text-xs"></i> COMPRAR AHORA
+                                    </button>
                                 </div>
-                                <button @click="addToCart(product)" class="w-full mt-3 bg-serco-red text-white text-xs font-bold py-2 rounded hover:bg-serco-dark-red transition flex items-center justify-center gap-2">
-                                    <i class="fas fa-cart-plus"></i> Añadir
-                                </button>
                             </div>
                         </template>
                     </div>
@@ -717,21 +898,29 @@
 
                 <!-- ======= COMPRA POR CATEGORÍA ======= -->
                 <section>
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-lg font-extrabold text-serco-dark uppercase tracking-wide">COMPRA POR CATEGORÍA</h2>
-                        <div class="flex gap-1">
-                            <button @click="scrollCarousel('categorias', -1)" class="w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center hover:bg-gray-100 transition text-gray-500"><i class="fas fa-chevron-left text-xs"></i></button>
-                            <button @click="scrollCarousel('categorias', 1)" class="w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center hover:bg-gray-100 transition text-gray-500"><i class="fas fa-chevron-right text-xs"></i></button>
+                    <div class="flex items-center justify-between mb-4 border-b border-gray-200 dark:border-[#20273C] pb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-serco-purple shadow-[0_0_10px_#7928CA]"></span>
+                            <h2 class="text-base md:text-lg font-orbitron font-black text-gray-900 dark:text-white uppercase tracking-wider">
+                                COMPRA POR CATEGORÍA
+                            </h2>
+                        </div>
+                        <div class="flex gap-1.5">
+                            <button @click="scrollCarousel('categorias', -1)" class="w-8 h-8 border border-gray-300 dark:border-[#28334E] rounded-lg flex items-center justify-center hover:bg-serco-pink hover:text-white transition text-gray-400"><i class="fas fa-chevron-left text-xs"></i></button>
+                            <button @click="scrollCarousel('categorias', 1)" class="w-8 h-8 border border-gray-300 dark:border-[#28334E] rounded-lg flex items-center justify-center hover:bg-serco-blue hover:text-gray-950 transition text-gray-400"><i class="fas fa-chevron-right text-xs"></i></button>
                         </div>
                     </div>
-                    <div id="carousel-categorias" class="carousel-scroll flex gap-4 overflow-x-auto pb-2">
+
+                    <div id="carousel-categorias" class="carousel-scroll flex gap-4 overflow-x-auto pb-3">
                         <template x-for="cat in categoryCards" :key="cat.name">
-                            <a href="#" class="relative min-w-[180px] w-[180px] h-[200px] rounded-lg overflow-hidden flex-shrink-0 group">
-                                <img :src="cat.image" :alt="cat.name" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                                <div class="absolute bottom-4 left-4 right-4 text-white">
-                                    <h3 class="font-bold text-sm" x-text="cat.name"></h3>
-                                    <p class="text-[10px] opacity-80 mt-0.5" x-text="cat.count + ' productos'"></p>
+                            <a href="#" class="relative min-w-[180px] w-[180px] h-[210px] rounded-xl overflow-hidden flex-shrink-0 group border border-gray-200 dark:border-rog-border shadow-lg">
+                                <img :src="cat.image" :alt="cat.name" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent"></div>
+                                <div class="absolute bottom-3 left-3 right-3 text-white">
+                                    <h3 class="font-orbitron font-bold text-xs leading-tight group-hover:text-serco-pink transition" x-text="cat.name"></h3>
+                                    <p class="text-[10px] text-serco-blue font-gaming font-bold mt-1 flex items-center gap-1">
+                                        <span x-text="cat.count"></span> productos <i class="fas fa-arrow-right text-[8px]"></i>
+                                    </p>
                                 </div>
                             </a>
                         </template>
@@ -740,35 +929,53 @@
 
                 <!-- ======= MÁS VENDIDOS ======= -->
                 <section>
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-lg font-extrabold text-serco-dark uppercase tracking-wide">MÁS VENDIDOS</h2>
-                        <div class="flex gap-1">
-                            <button @click="scrollCarousel('vendidos', -1)" class="w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center hover:bg-gray-100 transition text-gray-500"><i class="fas fa-chevron-left text-xs"></i></button>
-                            <button @click="scrollCarousel('vendidos', 1)" class="w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center hover:bg-gray-100 transition text-gray-500"><i class="fas fa-chevron-right text-xs"></i></button>
+                    <div class="flex items-center justify-between mb-4 border-b border-gray-200 dark:border-[#20273C] pb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-serco-red shadow-rog-glow-red"></span>
+                            <h2 class="text-base md:text-lg font-orbitron font-black text-gray-900 dark:text-white uppercase tracking-wider">
+                                MÁS VENDIDOS
+                            </h2>
+                        </div>
+                        <div class="flex gap-1.5">
+                            <button @click="scrollCarousel('vendidos', -1)" class="w-8 h-8 border border-gray-300 dark:border-[#28334E] rounded-lg flex items-center justify-center hover:bg-serco-pink hover:text-white transition text-gray-400"><i class="fas fa-chevron-left text-xs"></i></button>
+                            <button @click="scrollCarousel('vendidos', 1)" class="w-8 h-8 border border-gray-300 dark:border-[#28334E] rounded-lg flex items-center justify-center hover:bg-serco-blue hover:text-gray-950 transition text-gray-400"><i class="fas fa-chevron-right text-xs"></i></button>
                         </div>
                     </div>
-                    <div id="carousel-vendidos" class="carousel-scroll flex gap-4 overflow-x-auto pb-2">
+
+                    <div id="carousel-vendidos" class="carousel-scroll flex gap-4 overflow-x-auto pb-3">
                         <template x-for="product in bestSellers" :key="product.id">
-                            <div class="product-card bg-white border border-gray-200 rounded-lg p-3 min-w-[220px] w-[220px] flex-shrink-0 relative">
-                                <span x-show="product.badge" class="absolute top-2 left-2 text-white text-[9px] font-bold px-2 py-0.5 rounded z-10"
-                                      :class="product.badge === '¡Oferta!' ? 'bg-serco-red' : 'bg-serco-green'"
-                                      x-text="product.badge"></span>
-                                <div class="h-[140px] flex items-center justify-center mb-3">
-                                    <img :src="product.image" :alt="product.name" class="max-h-full max-w-full object-contain">
-                                </div>
-                                <div class="border-t border-serco-red/30 pt-2" style="border-top: 3px solid #E30613;">
-                                    <div class="flex gap-0.5 mb-1">
-                                        <i class="fas fa-star star-empty text-[10px]"></i><i class="fas fa-star star-empty text-[10px]"></i><i class="fas fa-star star-empty text-[10px]"></i><i class="fas fa-star star-empty text-[10px]"></i><i class="fas fa-star star-empty text-[10px]"></i>
+                            <div class="product-card bg-white dark:bg-rog-card border border-gray-200 dark:border-rog-border rounded-xl p-3.5 min-w-[220px] w-[220px] flex-shrink-0 flex flex-col justify-between shadow-md">
+                                <div>
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-[9px] font-orbitron font-bold text-serco-blue" x-text="product.brand"></span>
+                                        <span class="bg-serco-red text-white text-[9px] font-orbitron font-bold px-2 py-0.5 rounded shadow-[0_0_10px_rgba(255,0,63,0.5)]">TOP #1</span>
                                     </div>
-                                    <h3 class="text-xs font-semibold leading-tight mb-2 min-h-[32px] line-clamp-2" x-text="product.name"></h3>
-                                    <p class="text-[10px] text-gray-500"><span class="font-semibold">Stock:</span> <span x-text="product.stock > 0 ? (product.stockLabel || 'Mayor a 10') : 'Agotado'"></span></p>
-                                    <p class="text-[10px] text-gray-500 mb-2"><span class="font-semibold">Referencia:</span> <span x-text="product.ref"></span></p>
-                                    <span class="text-sm font-bold text-serco-dark" x-text="'$ ' + product.priceUSD.toFixed(2)"></span>
-                                    <span class="text-xs text-serco-red font-semibold ml-1" x-text="'(S/ ' + product.pricePEN.toFixed(2) + ')'"></span>
+                                    
+                                    <div class="h-[140px] flex items-center justify-center bg-gray-50 dark:bg-[#0E121B] rounded-lg p-2 mb-3 border border-gray-100 dark:border-gray-800/80">
+                                        <img :src="product.image" :alt="product.name" class="max-h-full max-w-full object-contain">
+                                    </div>
+                                    
+                                    <div class="flex gap-0.5 mb-1.5 text-yellow-400 text-[9px]">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    </div>
+                                    
+                                    <h3 class="text-xs font-bold leading-snug mb-2 min-h-[34px] line-clamp-2 text-gray-900 dark:text-gray-100" x-text="product.name"></h3>
+                                    
+                                    <p class="text-[10px] text-gray-500 dark:text-gray-400"><span class="font-semibold text-gray-700 dark:text-gray-300">Stock:</span> <span class="text-serco-blue font-bold" x-text="product.stock > 0 ? (product.stockLabel || 'Mayor a 10') : 'Agotado'"></span></p>
+                                    <p class="text-[10px] text-gray-500 dark:text-gray-400 mb-2"><span class="font-semibold text-gray-700 dark:text-gray-300">Ref:</span> <span x-text="product.ref"></span></p>
                                 </div>
-                                <button @click="addToCart(product)" class="w-full mt-3 bg-serco-red text-white text-xs font-bold py-2 rounded hover:bg-serco-dark-red transition flex items-center justify-center gap-2">
-                                    <i class="fas fa-cart-plus"></i> Añadir
-                                </button>
+                                
+                                <div>
+                                    <div class="border-t border-gray-100 dark:border-[#20283C] pt-2.5 flex items-baseline justify-between">
+                                        <span class="text-sm font-black text-serco-pink font-gaming" x-text="'S/ ' + product.pricePEN.toFixed(2)"></span>
+                                        <span class="text-xs text-serco-blue font-gaming font-bold" x-text="'$' + product.priceUSD.toFixed(2)"></span>
+                                    </div>
+                                    
+                                    <button @click="addToCart(product)" 
+                                            class="w-full mt-2.5 bg-gradient-to-r from-serco-red to-serco-pink text-white text-xs font-orbitron font-bold py-2 rounded-lg hover:shadow-rog-glow-pink transition flex items-center justify-center gap-1.5">
+                                        <i class="fas fa-cart-plus text-xs"></i> AÑADIR
+                                    </button>
+                                </div>
                             </div>
                         </template>
                     </div>
@@ -776,51 +983,75 @@
 
                 <!-- ======= MONITORES GAMING ======= -->
                 <section>
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-lg font-extrabold text-serco-dark uppercase tracking-wide">MONITORES GAMING</h2>
-                        <div class="flex gap-1">
-                            <button @click="scrollCarousel('monitores', -1)" class="w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center hover:bg-gray-100 transition text-gray-500"><i class="fas fa-chevron-left text-xs"></i></button>
-                            <button @click="scrollCarousel('monitores', 1)" class="w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center hover:bg-gray-100 transition text-gray-500"><i class="fas fa-chevron-right text-xs"></i></button>
+                    <div class="flex items-center justify-between mb-4 border-b border-gray-200 dark:border-[#20273C] pb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-serco-blue shadow-rog-glow-blue"></span>
+                            <h2 class="text-base md:text-lg font-orbitron font-black text-gray-900 dark:text-white uppercase tracking-wider">
+                                MONITORES GAMING ALTA TASA
+                            </h2>
+                        </div>
+                        <div class="flex gap-1.5">
+                            <button @click="scrollCarousel('monitores', -1)" class="w-8 h-8 border border-gray-300 dark:border-[#28334E] rounded-lg flex items-center justify-center hover:bg-serco-pink hover:text-white transition text-gray-400"><i class="fas fa-chevron-left text-xs"></i></button>
+                            <button @click="scrollCarousel('monitores', 1)" class="w-8 h-8 border border-gray-300 dark:border-[#28334E] rounded-lg flex items-center justify-center hover:bg-serco-blue hover:text-gray-950 transition text-gray-400"><i class="fas fa-chevron-right text-xs"></i></button>
                         </div>
                     </div>
-                    <div id="carousel-monitores" class="carousel-scroll flex gap-4 overflow-x-auto pb-2">
+
+                    <div id="carousel-monitores" class="carousel-scroll flex gap-4 overflow-x-auto pb-3">
                         <template x-for="product in gamingMonitors" :key="product.id">
-                            <div class="product-card bg-white border border-gray-200 rounded-lg p-3 min-w-[220px] w-[220px] flex-shrink-0 relative">
-                                <span x-show="product.badge" class="absolute top-2 right-2 text-white text-[9px] font-bold px-2 py-0.5 rounded z-10"
-                                      :class="product.badge === 'Nuevo' ? 'bg-serco-green' : 'bg-serco-red'"
-                                      x-text="product.badge"></span>
-                                <div class="flex items-center justify-center mb-1">
-                                    <span class="text-[10px] font-bold text-serco-red" x-text="product.brand"></span>
-                                </div>
-                                <div class="h-[140px] flex items-center justify-center mb-3">
-                                    <img :src="product.image" :alt="product.name" class="max-h-full max-w-full object-contain">
-                                </div>
-                                <div class="border-t border-gray-100 pt-2">
-                                    <div class="flex gap-0.5 mb-1">
-                                        <i class="fas fa-star star-empty text-[10px]"></i><i class="fas fa-star star-empty text-[10px]"></i><i class="fas fa-star star-empty text-[10px]"></i><i class="fas fa-star star-empty text-[10px]"></i><i class="fas fa-star star-empty text-[10px]"></i>
+                            <div class="product-card bg-white dark:bg-rog-card border border-gray-200 dark:border-rog-border rounded-xl p-3.5 min-w-[230px] w-[230px] flex-shrink-0 flex flex-col justify-between shadow-md">
+                                <div>
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-[9px] font-orbitron font-bold text-serco-pink" x-text="product.brand"></span>
+                                        <span x-show="product.badge" 
+                                              class="text-white text-[9px] font-orbitron font-bold px-2 py-0.5 rounded"
+                                              :class="product.badge === 'Nuevo' ? 'bg-serco-blue text-gray-950 shadow-[0_0_10px_rgba(0,240,255,0.6)]' : 'bg-serco-pink shadow-[0_0_10px_rgba(255,0,127,0.6)]'"
+                                              x-text="product.badge"></span>
                                     </div>
-                                    <h3 class="text-xs font-semibold leading-tight mb-2 min-h-[40px] line-clamp-3" x-text="product.name"></h3>
-                                    <p class="text-[10px] text-gray-500"><span class="font-semibold">Stock:</span> <span x-text="product.stock > 0 ? (product.stockLabel || 'Mayor a 10') : product.stock"></span></p>
-                                    <p class="text-[10px] text-gray-500 mb-2"><span class="font-semibold">Referencia:</span> <span x-text="product.ref"></span></p>
-                                    <span class="text-sm font-bold text-serco-dark" x-text="'$ ' + product.priceUSD.toFixed(2)"></span>
-                                    <span class="text-xs text-serco-red font-semibold ml-1" x-text="'(S/ ' + product.pricePEN.toFixed(2) + ')'"></span>
+                                    
+                                    <div class="h-[140px] flex items-center justify-center bg-gray-50 dark:bg-[#0E121B] rounded-lg p-2 mb-3 border border-gray-100 dark:border-gray-800/80">
+                                        <img :src="product.image" :alt="product.name" class="max-h-full max-w-full object-contain">
+                                    </div>
+                                    
+                                    <div class="flex gap-0.5 mb-1.5 text-yellow-400 text-[9px]">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    </div>
+                                    
+                                    <h3 class="text-xs font-bold leading-snug mb-2 min-h-[34px] line-clamp-2 text-gray-900 dark:text-gray-100" x-text="product.name"></h3>
+                                    
+                                    <p class="text-[10px] text-gray-500 dark:text-gray-400"><span class="font-semibold text-gray-700 dark:text-gray-300">Stock:</span> <span class="text-serco-blue font-bold" x-text="product.stock > 0 ? (product.stockLabel || 'Mayor a 10') : 'Agotado'"></span></p>
+                                    <p class="text-[10px] text-gray-500 dark:text-gray-400 mb-2"><span class="font-semibold text-gray-700 dark:text-gray-300">Ref:</span> <span x-text="product.ref"></span></p>
                                 </div>
-                                <button @click="addToCart(product)" class="w-full mt-3 bg-serco-red text-white text-xs font-bold py-2 rounded hover:bg-serco-dark-red transition flex items-center justify-center gap-2">
-                                    <i class="fas fa-cart-plus"></i> Añadir
-                                </button>
+                                
+                                <div>
+                                    <div class="border-t border-gray-100 dark:border-[#20283C] pt-2.5 flex items-baseline justify-between">
+                                        <span class="text-sm font-black text-serco-pink font-gaming" x-text="'S/ ' + product.pricePEN.toFixed(2)"></span>
+                                        <span class="text-xs text-serco-blue font-gaming font-bold" x-text="'$' + product.priceUSD.toFixed(2)"></span>
+                                    </div>
+                                    
+                                    <button @click="addToCart(product)" 
+                                            class="w-full mt-2.5 bg-gradient-to-r from-serco-pink to-serco-blue text-white text-xs font-orbitron font-bold py-2 rounded-lg hover:shadow-rog-glow-blue transition flex items-center justify-center gap-1.5">
+                                        <i class="fas fa-cart-plus text-xs"></i> AÑADIR
+                                    </button>
+                                </div>
                             </div>
                         </template>
                     </div>
                 </section>
+
             </div>
         </div>
 
-        <!-- ======= BRANDS CAROUSEL ======= -->
-        <section class="mt-12 mb-8">
-            <div class="flex items-center justify-center gap-8 md:gap-16 flex-wrap py-8 border-t border-b border-gray-200">
+        <!-- ======= BRANDS SECTION (ROG STRIX & TOP GAMING PARTNERS) ======= -->
+        <section class="mt-14 mb-8 bg-white dark:bg-rog-surface border border-gray-200 dark:border-rog-border rounded-2xl p-6 shadow-xl">
+            <div class="text-center mb-6">
+                <span class="text-[10px] font-orbitron font-bold text-serco-pink uppercase tracking-widest">PARTNERS & MARCAS OFICIALES</span>
+                <h3 class="text-lg font-orbitron font-black text-gray-900 dark:text-white">HARDWARE AUTORIZADO EN PERÚ</h3>
+            </div>
+            
+            <div class="flex items-center justify-center gap-8 md:gap-14 flex-wrap">
                 <template x-for="brand in brandLogos" :key="brand.name">
-                    <div class="grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100 cursor-pointer">
-                        <span class="text-2xl md:text-3xl font-extrabold tracking-tight" :style="'color:' + brand.color" x-text="brand.name"></span>
+                    <div class="px-4 py-2 rounded-xl bg-gray-50 dark:bg-[#181E2C] border border-gray-200 dark:border-[#28334E] hover:border-serco-pink dark:hover:border-serco-pink hover:shadow-rog-glow-pink transition-all duration-300 cursor-pointer group">
+                        <span class="text-xl md:text-2xl font-orbitron font-black tracking-wider transition-colors" :style="'color:' + brand.color" x-text="brand.name"></span>
                     </div>
                 </template>
             </div>
@@ -829,100 +1060,109 @@
     </main>
 
     <!-- ============================================================
-         FOOTER
+         FOOTER (CYBERPUNK ROG STRIX MULTI-COLUMN)
          ============================================================ -->
-    <footer class="bg-gray-800 text-gray-300">
-        <!-- Main Footer -->
-        <div class="max-w-7xl mx-auto px-4 py-10">
+    <footer class="bg-[#0A0D14] text-gray-300 border-t border-[#1E2538] mt-16 relative">
+        <div class="h-1 bg-rog-gradient w-full"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 py-12">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Column 1: Company Info -->
-                <div>
-                    <div class="flex items-center mb-4">
-                        <div class="bg-serco-red text-white p-1.5 rounded mr-1">
-                            <i class="fas fa-server text-sm"></i>
+                
+                <!-- Columna 1: Info Empresa -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-serco-red via-serco-pink to-serco-blue p-[2px]">
+                            <div class="w-full h-full bg-[#0A0D14] rounded-[6px] flex items-center justify-center text-serco-pink">
+                                <i class="fas fa-gamepad text-sm"></i>
+                            </div>
                         </div>
-                        <div class="leading-tight">
-                            <span class="text-serco-red font-extrabold text-lg">SERCO</span><span class="font-extrabold text-lg text-white">PLUS</span>
-                        </div>
+                        <span class="font-orbitron font-black text-lg text-white">SERCO<span class="text-serco-pink">PLUS</span></span>
                     </div>
+                    <p class="text-xs text-gray-400 font-gaming">Líder en distribución mayorista y retail de cómputo, hardware de alto rendimiento y setups gaming en el Perú.</p>
+                    
                     <div class="text-xs space-y-2 text-gray-400">
-                        <p><span class="font-semibold text-gray-300">Ventas:</span> (01) 618522 - 954547164 - 940351823 - 981022948 - 981028646 - 991267630 - 959284743</p>
-                        <p><span class="font-semibold text-gray-300">Email:</span> ventas@sercoplus.com</p>
-                        <p><span class="font-semibold text-gray-300">Dirección:</span> Av. Garcilaso de la Vega 1248 - 1250, Galería Compupalace (Tienda 251)</p>
-                        <p><span class="font-semibold text-gray-300">WhatsApp Garantía:</span> 959283316</p>
-                        <p><span class="font-semibold text-gray-300">Dirección de Soporte:</span> Av. Garcilaso de la Vega 1248 - 1250, Galería Compupalace (Tienda 107)</p>
+                        <p><strong class="text-white">Central Telefónica:</strong> (01) 618522 - 954547164</p>
+                        <p><strong class="text-white">Email:</strong> ventas@sercoplus.com</p>
+                        <p><strong class="text-white">Sede Principal:</strong> Av. Garcilaso de la Vega 1248-1250, Galería Compupalace (Tienda 251)</p>
+                        <p><strong class="text-white">Soporte y Garantías:</strong> Tienda 107 - WhatsApp: 959283316</p>
                     </div>
-                    <div class="flex gap-3 mt-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f text-lg"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram text-lg"></i></a>
+                    
+                    <div class="flex gap-3 pt-2">
+                        <a href="#" class="w-8 h-8 rounded-lg bg-[#181E2C] text-gray-400 hover:text-serco-pink hover:border-serco-pink border border-gray-700 flex items-center justify-center transition"><i class="fab fa-facebook-f text-xs"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-lg bg-[#181E2C] text-gray-400 hover:text-serco-blue hover:border-serco-blue border border-gray-700 flex items-center justify-center transition"><i class="fab fa-instagram text-xs"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-lg bg-[#181E2C] text-gray-400 hover:text-serco-red hover:border-serco-red border border-gray-700 flex items-center justify-center transition"><i class="fab fa-youtube text-xs"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-lg bg-[#181E2C] text-gray-400 hover:text-serco-blue hover:border-serco-blue border border-gray-700 flex items-center justify-center transition"><i class="fab fa-discord text-xs"></i></a>
                     </div>
                 </div>
 
-                <!-- Column 2: Su Cuenta -->
+                <!-- Columna 2: Su Cuenta -->
                 <div>
-                    <h4 class="font-bold text-white text-sm mb-4 uppercase">Su Cuenta</h4>
+                    <h4 class="font-orbitron font-bold text-white text-xs mb-4 uppercase tracking-wider text-serco-blue border-b border-[#1E2538] pb-2">
+                        SU CUENTA
+                    </h4>
                     <ul class="space-y-2 text-xs text-gray-400">
-                        <li><a href="#" class="hover:text-white transition">Información personal</a></li>
-                        <li><a href="#" class="hover:text-white transition">Pedidos</a></li>
-                        <li><a href="#" class="hover:text-white transition">Facturas por abono</a></li>
-                        <li><a href="#" class="hover:text-white transition">Direcciones</a></li>
-                        <li><a href="#" class="hover:text-white transition">Mis listas de deseos</a></li>
-                        <li><a href="#" class="hover:text-white transition">Mis alertas</a></li>
+                        <li><a href="#" class="hover:text-serco-pink transition flex items-center gap-1.5"><i class="fas fa-chevron-right text-[8px] text-serco-pink"></i> Información Personal</a></li>
+                        <li><a href="#" class="hover:text-serco-pink transition flex items-center gap-1.5"><i class="fas fa-chevron-right text-[8px] text-serco-pink"></i> Seguimiento de Pedidos</a></li>
+                        <li><a href="#" class="hover:text-serco-pink transition flex items-center gap-1.5"><i class="fas fa-chevron-right text-[8px] text-serco-pink"></i> Facturas por Abono</a></li>
+                        <li><a href="#" class="hover:text-serco-pink transition flex items-center gap-1.5"><i class="fas fa-chevron-right text-[8px] text-serco-pink"></i> Mis Direcciones</a></li>
+                        <li><a href="#" class="hover:text-serco-pink transition flex items-center gap-1.5"><i class="fas fa-chevron-right text-[8px] text-serco-pink"></i> Lista de Deseos ROG</a></li>
                     </ul>
                 </div>
 
-                <!-- Column 3: Información + Políticas -->
+                <!-- Columna 3: Información & Políticas -->
                 <div>
-                    <h4 class="font-bold text-white text-sm mb-4 uppercase">Información</h4>
+                    <h4 class="font-orbitron font-bold text-white text-xs mb-4 uppercase tracking-wider text-serco-pink border-b border-[#1E2538] pb-2">
+                        INFORMACIÓN & POLÍTICAS
+                    </h4>
                     <ul class="space-y-2 text-xs text-gray-400">
-                        <li><a href="#" class="hover:text-white transition">Términos y condiciones</a></li>
-                        <li><a href="#" class="hover:text-white transition">Nuestra Empresa</a></li>
-                        <li><a href="#" class="hover:text-white transition">Medios de Pago</a></li>
-                        <li><a href="#" class="hover:text-white transition">Términos y condiciones para Viaje con Sercoplus</a></li>
-                        <li><a href="#" class="hover:text-white transition">UBÍCANOS</a></li>
-                    </ul>
-                    <h4 class="font-bold text-white text-sm mt-6 mb-3 uppercase">Políticas</h4>
-                    <ul class="space-y-2 text-xs text-gray-400">
-                        <li><a href="#" class="hover:text-white transition">Política de Cookies</a></li>
-                        <li><a href="#" class="hover:text-white transition">Política de Privacidad de Datos Personales</a></li>
-                        <li><a href="#" class="hover:text-white transition">Política de Envío</a></li>
-                        <li><a href="#" class="hover:text-white transition">Política de Garantías</a></li>
+                        <li><a href="#" class="hover:text-serco-blue transition flex items-center gap-1.5"><i class="fas fa-chevron-right text-[8px] text-serco-blue"></i> Términos y Condiciones</a></li>
+                        <li><a href="#" class="hover:text-serco-blue transition flex items-center gap-1.5"><i class="fas fa-chevron-right text-[8px] text-serco-blue"></i> Medios de Pago Habilitados</a></li>
+                        <li><a href="#" class="hover:text-serco-blue transition flex items-center gap-1.5"><i class="fas fa-chevron-right text-[8px] text-serco-blue"></i> Política de Garantías y RMAs</a></li>
+                        <li><a href="#" class="hover:text-serco-blue transition flex items-center gap-1.5"><i class="fas fa-chevron-right text-[8px] text-serco-blue"></i> Política de Envío y Despacho</a></li>
+                        <li><a href="#" class="hover:text-serco-blue transition flex items-center gap-1.5"><i class="fas fa-chevron-right text-[8px] text-serco-blue"></i> Tratamiento de Datos Personales</a></li>
                     </ul>
                 </div>
 
-                <!-- Column 4: Newsletter + Libro de Reclamaciones -->
-                <div>
-                    <h4 class="font-bold text-white text-sm mb-4 uppercase">Boletín de Anuncios</h4>
-                    <div class="flex mb-3">
-                        <input type="email" placeholder="Su dirección de correo electrónico" class="flex-1 px-3 py-2 text-xs rounded-l bg-gray-700 border border-gray-600 text-white placeholder-gray-500 focus:outline-none focus:border-serco-red">
-                        <button class="bg-serco-red text-white text-xs font-bold px-4 py-2 rounded-r hover:bg-serco-dark-red transition">SUSCRIBIRSE</button>
+                <!-- Columna 4: Newsletter & Libro de Reclamaciones -->
+                <div class="space-y-4">
+                    <h4 class="font-orbitron font-bold text-white text-xs uppercase tracking-wider text-serco-blue border-b border-[#1E2538] pb-2">
+                        BOLETÍN EXCLUSIVO
+                    </h4>
+                    <p class="text-xs text-gray-400">Recibe alertas de drops de tarjetas gráficas, ofertas relámpago y cupones.</p>
+                    
+                    <div class="flex">
+                        <input type="email" placeholder="Tu correo electrónico" 
+                               class="w-full bg-[#141824] border border-[#252E46] rounded-l-lg px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-serco-pink">
+                        <button class="bg-gradient-to-r from-serco-red to-serco-pink text-white font-orbitron text-xs font-bold px-4 rounded-r-lg hover:shadow-rog-glow-pink transition">
+                            UNIRSE
+                        </button>
                     </div>
-                    <p class="text-[10px] text-gray-500 mb-6">Puede darse de baja en cualquier momento. Para ello, consulte nuestra información de contacto en el aviso legal.</p>
 
                     <!-- Libro de Reclamaciones -->
-                    <div class="border border-gray-600 rounded-lg p-3 flex items-center gap-3">
-                        <i class="fas fa-book-open text-2xl text-gray-400"></i>
+                    <div class="bg-[#131724] border border-[#252E46] rounded-xl p-3.5 flex items-center gap-3 hover:border-serco-pink transition">
+                        <i class="fas fa-book-bookmark text-2xl text-serco-pink"></i>
                         <div>
                             <h5 class="text-xs font-bold text-white">Libro de Reclamaciones</h5>
-                            <a href="#" class="text-[10px] text-serco-red hover:underline">Acceder aquí</a>
+                            <span class="text-[10px] text-serco-blue hover:underline cursor-pointer">Conforme a ley N° 29571</span>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
-        <!-- Bottom Footer -->
-        <div class="border-t border-gray-700">
-            <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-3">
-                <p class="text-[11px] text-gray-500">&copy; 2025 - Corporación Sercoplus SAC. Todos Los Derechos Reservados</p>
+        <!-- Bottom Copyright -->
+        <div class="border-t border-[#1A2033] bg-[#07090E] py-5">
+            <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-xs text-gray-500">&copy; 2026 - Corporación Sercoplus SAC. Sercoplus ROG Strix Edition. Todos los derechos reservados.</p>
                 <div class="flex items-center gap-3">
-                    <span class="text-[10px] text-gray-400">Métodos de pago:</span>
+                    <span class="text-[11px] text-gray-400">Pagos Seguros:</span>
                     <div class="flex items-center gap-2">
-                        <span class="bg-white text-blue-800 text-[10px] font-extrabold px-2 py-0.5 rounded">VISA</span>
-                        <span class="bg-yellow-500 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded">MC</span>
-                        <span class="bg-red-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded">Diners</span>
-                        <span class="text-[10px] font-bold text-blue-400">BBVA</span>
-                        <span class="text-[10px] font-bold text-orange-500">BCP</span>
+                        <span class="bg-[#1A2033] text-white text-[10px] font-bold px-2 py-1 rounded border border-gray-700">VISA</span>
+                        <span class="bg-[#1A2033] text-white text-[10px] font-bold px-2 py-1 rounded border border-gray-700">Mastercard</span>
+                        <span class="bg-[#1A2033] text-serco-pink text-[10px] font-bold px-2 py-1 rounded border border-gray-700">YAPE</span>
+                        <span class="bg-[#1A2033] text-serco-blue text-[10px] font-bold px-2 py-1 rounded border border-gray-700">PLIN</span>
+                        <span class="bg-[#1A2033] text-yellow-400 text-[10px] font-bold px-2 py-1 rounded border border-gray-700">BCP</span>
                     </div>
                 </div>
             </div>
@@ -930,10 +1170,10 @@
     </footer>
 
     <!-- ============================================================
-         CART DRAWER (Slide-over panel)
+         CART DRAWER (ROG STRIX CYBERPUNK PANEL)
          ============================================================ -->
-    <div x-show="cartOpen" x-cloak class="fixed inset-0 z-[60]" @keydown.escape.window="cartOpen = false">
-        <!-- Overlay -->
+    <div x-show="cartOpen" x-cloak class="fixed inset-0 z-[70]" @keydown.escape.window="cartOpen = false">
+        <!-- Backdrop -->
         <div x-show="cartOpen" 
              x-transition:enter="transition-opacity ease-out duration-300"
              x-transition:enter-start="opacity-0"
@@ -941,8 +1181,9 @@
              x-transition:leave="transition-opacity ease-in duration-200"
              x-transition:leave-start="opacity-100"
              x-transition:leave-end="opacity-0"
-             class="absolute inset-0 bg-black/50" @click="cartOpen = false"></div>
-        <!-- Drawer -->
+             class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="cartOpen = false"></div>
+
+        <!-- Slide-over Drawer -->
         <div x-show="cartOpen"
              x-transition:enter="transition ease-out duration-300"
              x-transition:enter-start="translate-x-full"
@@ -950,48 +1191,59 @@
              x-transition:leave="transition ease-in duration-200"
              x-transition:leave-start="translate-x-0"
              x-transition:leave-end="translate-x-full"
-             class="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col">
-            <!-- Header -->
-            <div class="bg-serco-red text-white px-5 py-4 flex items-center justify-between flex-shrink-0">
-                <h3 class="font-bold text-base flex items-center gap-2">
-                    <i class="fas fa-shopping-cart"></i> 
-                    Carrito de Compras
-                    <span class="bg-white/20 text-xs px-2 py-0.5 rounded-full" x-text="cartTotalItems() + ' items'"></span>
-                </h3>
+             class="absolute right-0 top-0 h-full w-full max-w-md bg-white dark:bg-[#0D1017] border-l border-gray-200 dark:border-[#252E46] shadow-2xl flex flex-col z-10">
+            
+            <!-- Drawer Header -->
+            <div class="bg-gradient-to-r from-serco-red via-serco-pink to-serco-blue text-white px-5 py-4 flex items-center justify-between shadow-lg flex-shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <i class="fas fa-cart-shopping text-base"></i>
+                    <h3 class="font-orbitron font-bold text-sm tracking-wide">CARRITO ROG GAMING</h3>
+                    <span class="bg-black/40 font-gaming font-bold text-xs px-2 py-0.5 rounded-full" x-text="cartTotalItems() + ' items'"></span>
+                </div>
                 <button @click="cartOpen = false" class="text-white hover:text-gray-200 transition">
-                    <i class="fas fa-times text-xl"></i>
+                    <i class="fas fa-times text-lg"></i>
                 </button>
             </div>
 
-            <!-- Cart Items -->
+            <!-- Items List -->
             <div class="flex-1 overflow-y-auto cart-scroll p-4 space-y-3">
                 <template x-if="cart.length === 0">
-                    <div class="flex flex-col items-center justify-center h-full text-gray-400">
-                        <i class="fas fa-shopping-bag text-6xl mb-4 opacity-30"></i>
-                        <p class="text-sm font-medium">Tu carrito está vacío</p>
-                        <p class="text-xs mt-1">¡Agrega productos para comenzar!</p>
-                        <button @click="cartOpen = false" class="mt-4 bg-serco-red text-white text-xs font-bold px-6 py-2 rounded hover:bg-serco-dark-red transition">
-                            Continuar comprando
+                    <div class="flex flex-col items-center justify-center h-full text-gray-400 py-12">
+                        <div class="w-20 h-20 rounded-full bg-serco-pink/10 border border-serco-pink/30 flex items-center justify-center text-serco-pink mb-4 text-3xl">
+                            <i class="fas fa-basket-shopping"></i>
+                        </div>
+                        <p class="font-orbitron font-bold text-sm text-gray-300">TU CARRITO ESTÁ VACÍO</p>
+                        <p class="text-xs text-gray-500 mt-1">Explora nuestras ofertas en hardware de última generación.</p>
+                        <button @click="cartOpen = false" class="mt-5 bg-gradient-to-r from-serco-red to-serco-pink text-white text-xs font-orbitron font-bold px-6 py-2.5 rounded-lg hover:shadow-rog-glow-pink transition">
+                            EXPLORAR CATÁLOGO
                         </button>
                     </div>
                 </template>
-                <template x-for="(item, index) in cart" :key="item.id">
-                    <div class="flex gap-3 bg-gray-50 rounded-lg p-3 border border-gray-100">
-                        <img :src="item.image" :alt="item.name" class="w-16 h-16 object-contain flex-shrink-0 rounded">
+
+                <template x-for="item in cart" :key="item.id">
+                    <div class="flex gap-3 bg-gray-50 dark:bg-[#141824] rounded-xl p-3 border border-gray-200 dark:border-[#222A3E] hover:border-serco-pink/50 transition">
+                        <img :src="item.image" :alt="item.name" class="w-16 h-16 object-contain bg-white dark:bg-[#0A0D14] rounded-lg p-1 border border-gray-200 dark:border-gray-800 flex-shrink-0">
+                        
                         <div class="flex-1 min-w-0">
-                            <h4 class="text-xs font-semibold leading-tight line-clamp-2" x-text="item.name"></h4>
-                            <p class="text-xs text-serco-red font-bold mt-1" x-text="'S/ ' + item.pricePEN.toFixed(2)"></p>
+                            <h4 class="text-xs font-bold text-gray-900 dark:text-gray-100 leading-snug line-clamp-2" x-text="item.name"></h4>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="text-xs font-black text-serco-pink font-gaming" x-text="'S/ ' + item.pricePEN.toFixed(2)"></span>
+                                <span class="text-[11px] text-serco-blue font-gaming" x-text="'($' + item.priceUSD.toFixed(2) + ')'"></span>
+                            </div>
+                            
                             <!-- Quantity Controls -->
                             <div class="flex items-center gap-2 mt-2">
-                                <button @click="updateCartQty(item.id, -1)" class="w-6 h-6 rounded border border-gray-300 flex items-center justify-center text-xs hover:bg-gray-100 transition">
-                                    <i class="fas fa-minus text-[8px]"></i>
-                                </button>
-                                <span class="text-xs font-bold w-6 text-center" x-text="item.qty"></span>
-                                <button @click="updateCartQty(item.id, 1)" class="w-6 h-6 rounded border border-gray-300 flex items-center justify-center text-xs hover:bg-gray-100 transition">
-                                    <i class="fas fa-plus text-[8px]"></i>
-                                </button>
-                                <button @click="removeFromCart(item.id)" class="ml-auto text-gray-400 hover:text-serco-red transition">
-                                    <i class="fas fa-trash-alt text-xs"></i>
+                                <div class="flex items-center border border-gray-300 dark:border-[#28334E] rounded-md bg-white dark:bg-[#0A0D14]">
+                                    <button @click="updateCartQty(item.id, -1)" class="w-6 h-6 flex items-center justify-center text-xs text-gray-400 hover:text-serco-pink transition">
+                                        <i class="fas fa-minus text-[8px]"></i>
+                                    </button>
+                                    <span class="text-xs font-bold font-gaming w-6 text-center text-gray-800 dark:text-gray-200" x-text="item.qty"></span>
+                                    <button @click="updateCartQty(item.id, 1)" class="w-6 h-6 flex items-center justify-center text-xs text-gray-400 hover:text-serco-blue transition">
+                                        <i class="fas fa-plus text-[8px]"></i>
+                                    </button>
+                                </div>
+                                <button @click="removeFromCart(item.id)" class="ml-auto text-gray-400 hover:text-serco-red transition text-xs">
+                                    <i class="fas fa-trash-can"></i>
                                 </button>
                             </div>
                         </div>
@@ -999,35 +1251,36 @@
                 </template>
             </div>
 
-            <!-- Cart Summary -->
-            <div x-show="cart.length > 0" class="border-t border-gray-200 p-4 bg-gray-50 flex-shrink-0 space-y-3">
-                <div class="flex justify-between text-sm">
-                    <span class="text-gray-600">Subtotal:</span>
-                    <span class="font-bold" x-text="'S/ ' + cartTotalPEN().toFixed(2)"></span>
+            <!-- Summary & Checkout Footer -->
+            <div x-show="cart.length > 0" class="border-t border-gray-200 dark:border-[#20283C] p-4 bg-gray-50 dark:bg-[#0F131D] flex-shrink-0 space-y-2.5">
+                <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400 font-gaming">
+                    <span>Subtotal:</span>
+                    <span class="font-bold text-gray-900 dark:text-gray-200" x-text="'S/ ' + cartTotalPEN().toFixed(2)"></span>
                 </div>
-                <div class="flex justify-between text-sm">
-                    <span class="text-gray-600">IGV (18%):</span>
-                    <span class="font-semibold" x-text="'S/ ' + (cartTotalPEN() * 0.18).toFixed(2)"></span>
+                <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400 font-gaming">
+                    <span>IGV Incluido (18%):</span>
+                    <span class="font-bold text-serco-blue" x-text="'S/ ' + (cartTotalPEN() * 0.18 / 1.18).toFixed(2)"></span>
                 </div>
-                <div class="flex justify-between text-base font-bold border-t border-gray-300 pt-3">
-                    <span>Total:</span>
-                    <span class="text-serco-red" x-text="'S/ ' + (cartTotalPEN() * 1.18).toFixed(2)"></span>
+                <div class="flex justify-between text-sm font-bold border-t border-gray-300 dark:border-[#252E46] pt-2">
+                    <span class="font-orbitron text-gray-900 dark:text-white">TOTAL:</span>
+                    <span class="text-base font-orbitron font-black text-serco-pink shadow-sm" x-text="'S/ ' + cartTotalPEN().toFixed(2)"></span>
                 </div>
-                <button class="w-full bg-serco-red text-white font-bold py-3 rounded-lg hover:bg-serco-dark-red transition text-sm flex items-center justify-center gap-2">
-                    <i class="fas fa-lock"></i> Proceder al Checkout
+                
+                <button class="w-full bg-gradient-to-r from-serco-red via-serco-pink to-serco-magenta text-white font-orbitron font-bold py-3 rounded-xl hover:shadow-rog-glow-pink transition-all text-xs flex items-center justify-center gap-2">
+                    <i class="fas fa-lock text-xs"></i> FINALIZAR COMPRA
                 </button>
-                <button @click="cartOpen = false" class="w-full text-center text-xs text-gray-500 hover:text-serco-red transition py-1">
-                    &larr; Continuar comprando
+                <button @click="cartOpen = false" class="w-full text-center text-[11px] text-gray-400 hover:text-serco-pink transition">
+                    &larr; Continuar explorando
                 </button>
             </div>
         </div>
     </div>
 
     <!-- ============================================================
-         WHATSAPP FLOATING BUTTON
+         WHATSAPP FLOATING BUTTON (ROG NEON PULSE)
          ============================================================ -->
     <a href="https://wa.me/51954547164" target="_blank" 
-       class="fixed bottom-6 right-6 z-50 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition whatsapp-pulse">
+       class="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-all duration-300 whatsapp-pulse">
         <i class="fab fa-whatsapp text-3xl"></i>
     </a>
 
@@ -1035,20 +1288,23 @@
          BACK TO TOP BUTTON
          ============================================================ -->
     <button x-data="{ show: false }"
-            @scroll.window="show = window.scrollY > 500"
+            @scroll.window="show = window.scrollY > 400"
             x-show="show" x-cloak
             x-transition
             @click="window.scrollTo({top:0, behavior:'smooth'})"
-            class="fixed bottom-6 right-24 z-50 bg-gray-600 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:bg-gray-700 transition">
+            class="fixed bottom-6 right-24 z-50 bg-[#161B29] border border-serco-pink/50 text-serco-pink hover:bg-serco-pink hover:text-white w-11 h-11 rounded-full flex items-center justify-center shadow-lg transition-all duration-300">
         <i class="fas fa-arrow-up text-sm"></i>
     </button>
 
     <!-- ============================================================
-         ALPINE.JS APPLICATION STATE
+         ALPINE.JS GLOBAL REACTIVE STORE
          ============================================================ -->
     <script>
     function sercoplusApp() {
         return {
+            // === Dark Mode State ===
+            darkMode: true, // Default to ROG Strix Dark Mode
+            
             // === UI State ===
             cartOpen: false,
             mobileMenuOpen: false,
@@ -1065,153 +1321,136 @@
                 {
                     name: 'Procesadores',
                     icon: 'fas fa-microchip',
-                    subcategories: ['Procesadores AMD', 'Procesadores Intel', 'AMD Ryzen 5', 'AMD Ryzen 7', 'AMD Ryzen 9', 'Intel Core i5', 'Intel Core i7', 'Intel Core i9']
+                    subcategories: ['AMD Ryzen 9 9950X3D', 'AMD Ryzen 7 9800X3D', 'AMD Ryzen 5 9600X', 'Intel Core Ultra 9 285K', 'Intel Core Ultra 7 265K', 'Intel Core i9 14900KS']
+                },
+                {
+                    name: 'Tarjetas Gráficas',
+                    icon: 'fas fa-tv',
+                    subcategories: ['ROG Strix RTX 5090', 'ROG Strix RTX 5080', 'ROG Strix RTX 5070', 'TUF Gaming RTX 4070 Ti', 'Radeon RX 7900 XTX', 'NVIDIA Quadro / RTX Workstation']
+                },
+                {
+                    name: 'Laptops Gamer',
+                    icon: 'fas fa-laptop',
+                    subcategories: ['ROG Strix SCAR 18', 'ROG Zephyrus G16 OLED', 'ASUS TUF Gaming A15', 'MSI Raider GE78', 'Lenovo Legion Pro 7i', 'Acer Predator Helios']
                 },
                 {
                     name: 'Placas Madre',
                     icon: 'fas fa-th',
-                    subcategories: ['Placas AMD AM5', 'Placas AMD AM4', 'Placas Intel LGA1700', 'Placas Intel LGA1851', 'ASUS', 'MSI', 'GIGABYTE']
+                    subcategories: ['ROG Maximus Z890 Hero', 'ROG Strix X870E-E Gaming', 'TUF Gaming B650-PLUS', 'MSI MAG X870 Tomahawk', 'Gigabyte X870 AORUS Master']
                 },
                 {
-                    name: 'Memorias RAM',
+                    name: 'Memorias RAM DDR5',
                     icon: 'fas fa-memory',
-                    subcategories: ['DDR5', 'DDR4', 'RAM para Laptop', 'RAM para Desktop', 'Kingston', 'Corsair', 'G.Skill']
+                    subcategories: ['Corsair Dominator Titanium DDR5', 'G.Skill Trident Z5 RGB', 'Kingston Fury Renegade RGB', 'Kingston Fury Beast DDR5', 'Kits 32GB / 64GB 7200MHz']
                 },
                 {
-                    name: 'Almacenamiento',
-                    icon: 'fas fa-hdd',
-                    subcategories: ['SSD NVMe M.2', 'SSD SATA', 'Discos Duros HDD', 'Discos Externos', 'USB Flash', 'Tarjetas MicroSD']
+                    name: 'Monitores Gaming',
+                    icon: 'fas fa-desktop',
+                    subcategories: ['ROG Swift OLED 360Hz', 'ROG Strix 27" Fast IPS 240Hz', 'ASUS TUF Gaming 34" Curvo', 'MSI MAG 274QPF-QD', 'Monitores 4K UHD 160Hz']
                 },
                 {
-                    name: 'Tarjetas de Video',
-                    icon: 'fas fa-tv',
-                    subcategories: ['NVIDIA GeForce RTX 40', 'NVIDIA GeForce RTX 30', 'NVIDIA GeForce GTX', 'AMD Radeon RX 7000', 'AMD Radeon RX 6000', 'NVIDIA Quadro']
-                },
-                {
-                    name: 'Cases / Gabinetes',
-                    icon: 'fas fa-server',
-                    subcategories: ['Cases Gaming', 'Cases ATX', 'Cases Micro ATX', 'Cases Mini ITX', 'Cases con Fuente', 'Antryx', 'Corsair']
+                    name: 'Refrigeración Líquida',
+                    icon: 'fas fa-fan',
+                    subcategories: ['ROG Ryujin III 360 ARGB', 'ROG Strix LC III 360', 'Corsair iCUE LINK Titan', 'DeepCool LT720 360mm', 'Pasta Térmica Thermal Grizzly']
                 },
                 {
                     name: 'Fuentes de Poder',
                     icon: 'fas fa-bolt',
-                    subcategories: ['Fuentes 500W', 'Fuentes 600W', 'Fuentes 700W', 'Fuentes 850W+', 'Certificadas 80 Plus', 'Modulares']
+                    subcategories: ['ROG Thor 1200W Platinum II', 'ROG Strix 1000W Gold Aura', 'Corsair RM1000x Shift', 'MSI MAG A850GL PCIe 5.0']
                 },
                 {
-                    name: 'Monitores',
-                    icon: 'fas fa-desktop',
-                    subcategories: ['Monitores Gaming', 'Monitores 4K', 'Monitores Curvos', 'Monitores 27"', 'Monitores 24"', 'Monitores 32"+']
-                },
-                {
-                    name: 'Periféricos',
+                    name: 'Periféricos RGB',
                     icon: 'fas fa-keyboard',
-                    subcategories: ['Teclados Gaming', 'Mouse Gaming', 'Audífonos Gaming', 'Webcams', 'Mousepad', 'Combos Teclado + Mouse']
+                    subcategories: ['Teclado ROG Azoth 75%', 'Mouse ROG Harpe Ace Aim Lab', 'Headset ROG Delta S Wireless', 'Mousepad ROG Balteus Qi']
                 }
             ],
 
-            // === Hero Slides ===
+            // === Hero Slides (ROG Strix / Cyberpunk Theme) ===
             heroSlides: [
                 {
-                    image: 'https://images.unsplash.com/photo-1587202372616-b43abea06c2a?w=1200&h=500&fit=crop',
-                    title: 'CREA CON LO MEJOR',
-                    subtitle: 'ProArt ASUS - Mayo 20 - Julio 24',
-                    tags: ['Promociones exclusivas', 'Charlas de Línea Maestra', 'Series de productos ProArt']
+                    image: 'https://images.unsplash.com/photo-1587202372616-b43abea06c2a?w=1400&h=600&fit=crop',
+                    title: 'ASUS ROG STRIX SCAR 18',
+                    subtitle: 'Dominio absoluto con Intel Core Ultra 9 y GeForce RTX 5080/5090.',
+                    tags: ['Pantalla Nebula HDR Mini LED', 'Refrigeración Líquida Tri-Fan', '32GB DDR5 5600MHz']
                 },
                 {
-                    image: 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=1200&h=500&fit=crop',
-                    title: 'GAMING AL MÁXIMO',
-                    subtitle: 'Las mejores laptops gaming con RTX 40 Series',
-                    tags: ['Laptops Gaming', 'RTX 4090', 'Envío Gratis']
+                    image: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=1400&h=600&fit=crop',
+                    title: 'GEFORCE RTX™ 50 SERIES',
+                    subtitle: 'La nueva arquitectura Blackwell con soporte completo para DLSS 4.',
+                    tags: ['ROG Strix RTX 5080 OC', '32GB VRAM GDDR7', 'Disipación Axial-tech']
                 },
                 {
-                    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1200&h=500&fit=crop',
-                    title: 'ARMA TU PC GAMER',
-                    subtitle: 'Componentes con los mejores precios del mercado',
-                    tags: ['Procesadores', 'Tarjetas de Video', 'Memorias RAM']
-                },
-                {
-                    image: 'https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=1200&h=500&fit=crop',
-                    title: 'MONITORES GAMING',
-                    subtitle: 'Pantallas curvas, 4K, 240Hz - Vive la experiencia',
-                    tags: ['MSI', 'ASUS', 'GIGABYTE']
+                    image: 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=1400&h=600&fit=crop',
+                    title: 'SETUPS GAMING PRO',
+                    subtitle: 'Arma tu computadora de ensueño con componentes 100% compatibles.',
+                    tags: ['Asesoría Gratuita', 'Pruebas de Rendimiento', 'Garantía Oficial Perú']
                 }
             ],
 
             // === New Products ===
             newProducts: [
-                { id: 'np1', name: 'ESTABILIZADOR CDP RAVR1408I, 1410VA/700W', brand: 'CDP', priceUSD: 17.40, pricePEN: 60.55, stock: 15, ref: '176080038', image: 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=300&h=300&fit=crop' },
-                { id: 'np2', name: 'AURICULAR ANTRYX GH-750 PINK 7.1 VIRTUAL', brand: 'ANTRYX', priceUSD: 30.20, pricePEN: 105.10, stock: 20, ref: '084060231', image: 'https://images.unsplash.com/photo-1599669454699-248893623440?w=300&h=300&fit=crop' },
-                { id: 'np3', name: 'MOUSE GAMING ANTRYX M760 PINK RGB', brand: 'ANTRYX', priceUSD: 16.60, pricePEN: 57.77, stock: 25, ref: '082060213', image: 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=300&h=300&fit=crop' },
-                { id: 'np4', name: 'MONITOR ASUS TuF Gaming VG249QM1SA, 24" C', brand: 'ASUS', priceUSD: 357.80, pricePEN: 1249.14, stock: 8, ref: '001160113', image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=300&h=300&fit=crop' },
-                { id: 'np5', name: 'TECLADO GAMING ANTRYX GK-950 RGB MECANICO', brand: 'ANTRYX', priceUSD: 45.90, pricePEN: 159.90, stock: 30, ref: '083060119', image: 'https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=300&h=300&fit=crop' },
-                { id: 'np6', name: 'SSD KINGSTON A400 480GB SATA 2.5"', brand: 'KINGSTON', priceUSD: 28.50, pricePEN: 99.25, stock: 50, ref: '052040087', image: 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=300&h=300&fit=crop' }
+                { id: 'np1', name: 'MOUSE GAMER ASUS ROG HARPE ACE AIM LAB EDITION WIRELESS', brand: 'ASUS ROG', priceUSD: 149.90, pricePEN: 554.63, stock: 15, ref: 'ROG-091001', image: 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=350&h=350&fit=crop' },
+                { id: 'np2', name: 'TECLADO MECÁNICO INALÁMBRICO ASUS ROG AZOTH 75% OLED RGB', brand: 'ASUS ROG', priceUSD: 269.00, pricePEN: 995.30, stock: 8, ref: 'ROG-082014', image: 'https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=350&h=350&fit=crop' },
+                { id: 'np3', name: 'AURICULARES GAMER ASUS ROG DELTA S WIRELESS HI-RES ESS 9281', brand: 'ASUS ROG', priceUSD: 199.50, pricePEN: 738.15, stock: 12, ref: 'ROG-073022', image: 'https://images.unsplash.com/photo-1599669454699-248893623440?w=350&h=350&fit=crop' },
+                { id: 'np4', name: 'WATER COOLER ASUS ROG RYUJIN III 360 ARGB PANTALLA LCD 3.5"', brand: 'ASUS ROG', priceUSD: 389.00, pricePEN: 1439.30, stock: 6, ref: 'ROG-061033', image: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=350&h=350&fit=crop' },
+                { id: 'np5', name: 'FUENTE DE PODER ASUS ROG THOR 1000W PLATINUM II OLED DISPLAY', brand: 'ASUS ROG', priceUSD: 350.00, pricePEN: 1295.00, stock: 10, ref: 'ROG-052044', image: 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=350&h=350&fit=crop' }
             ],
 
-            // === NVIDIA Products ===
+            // === NVIDIA RTX Products ===
             nvidiaProducts: [
-                { id: 'nv1', name: 'MSI GeForce RTX 4060 VENTUS 2X BLACK 8GB OC', brand: 'MSI', priceUSD: 320.50, pricePEN: 1116.54, stock: 12, ref: '021060045', badge: '', image: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=300&h=300&fit=crop' },
-                { id: 'nv2', name: 'ASUS DUAL GeForce RTX 4060 Ti OC 8GB GDDR6', brand: 'ASUS', priceUSD: 445.00, pricePEN: 1550.73, stock: 8, ref: '021050089', badge: '¡Oferta!', image: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=300&h=300&fit=crop' },
-                { id: 'nv3', name: 'GIGABYTE GeForce RTX 4070 WINDFORCE OC 12GB', brand: 'GIGABYTE', priceUSD: 589.00, pricePEN: 2052.27, stock: 5, ref: '021040112', badge: '', image: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=300&h=300&fit=crop' },
-                { id: 'nv4', name: 'MSI GeForce RTX 4070 Ti SUPER VENTUS 3X 16GB', brand: 'MSI', priceUSD: 780.00, pricePEN: 2717.40, stock: 3, ref: '021040078', badge: 'Nuevo', image: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=300&h=300&fit=crop' },
-                { id: 'nv5', name: 'ASUS ROG STRIX GeForce RTX 4080 SUPER OC 16GB', brand: 'ASUS', priceUSD: 1150.00, pricePEN: 4007.25, stock: 2, ref: '021030056', badge: '', image: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=300&h=300&fit=crop' }
+                { id: 'nv1', name: 'PLACA DE VIDEO ASUS ROG STRIX GEFORCE RTX 5080 OC 16GB GDDR7', brand: 'ASUS ROG', priceUSD: 1450.00, pricePEN: 5365.00, stock: 4, ref: 'ROG-5080-OC', badge: '¡Oferta!', image: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=350&h=350&fit=crop' },
+                { id: 'nv2', name: 'PLACA DE VIDEO ASUS ROG STRIX GEFORCE RTX 5070 GAMING OC 12GB', brand: 'ASUS ROG', priceUSD: 899.00, pricePEN: 3326.30, stock: 7, ref: 'ROG-5070-OC', badge: 'Top Venta', image: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=350&h=350&fit=crop' },
+                { id: 'nv3', name: 'TARJETA DE VIDEO MSI GEFORCE RTX 4070 Ti SUPER GAMING X SLIM', brand: 'MSI', priceUSD: 850.00, pricePEN: 3145.00, stock: 9, ref: 'MSI-4070TIS', badge: '', image: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=350&h=350&fit=crop' },
+                { id: 'nv4', name: 'TARJETA DE VIDEO GIGABYTE AORUS GEFORCE RTX 4080 SUPER MASTER 16GB', brand: 'GIGABYTE', priceUSD: 1199.00, pricePEN: 4436.30, stock: 5, ref: 'AOR-4080S', badge: 'Nuevo', image: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=350&h=350&fit=crop' }
             ],
 
-            // === Flash Deals / Ofertas Especiales ===
+            // === Flash Deals ===
             flashDeals: [
-                { id: 'fd1', name: 'Pc Gaming plus: GeForce RTX 5070 Ti, Ryzen 7 9800X3D, 32GB DDR5 5600, SSD 1TB, FUENTE 850W, CASE ARGB', brand: 'CUSTOM', priceUSD: 3052.90, pricePEN: 16624.09, originalPriceUSD: 3388.90, stock: 5, ref: '142000114', discount: 10, stockPercent: 40, image: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=300&h=300&fit=crop' },
-                { id: 'fd2', name: 'Pc Gaming plus: GeForce RTX 5060 Ti, Intel Core Ultra 5 234HF, 16GB DDR5, SSD 1TB, FUENTE 700W, CASE ARGB', brand: 'CUSTOM', priceUSD: 1716.50, pricePEN: 5973.42, originalPriceUSD: 1945.50, stock: 8, ref: '142000113', discount: 12, stockPercent: 60, image: 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=300&h=300&fit=crop' },
-                { id: 'fd3', name: 'Pc Gaming plus: GeForce RTX 5060 Ti, Ryzen 5 9600X, 16GB DDR5, SSD 1TB, FUENTE 700W, CASE ARGB', brand: 'CUSTOM', priceUSD: 1697.30, pricePEN: 5406.26, originalPriceUSD: 1890.30, stock: 6, ref: '142000112', discount: 10, stockPercent: 50, image: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=300&h=300&fit=crop' },
-                { id: 'fd4', name: 'Pc Gaming plus: Intel Core i5 2250F, 16GB DDR5, SSD 1TB, RTX 4060 8GB, FUENTE 650W, CASE ARGB', brand: 'CUSTOM', priceUSD: 1179.00, pricePEN: 4102.92, originalPriceUSD: 1320.00, stock: 10, ref: '142000109', discount: 11, stockPercent: 70, image: 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=300&h=300&fit=crop' }
+                { id: 'fd1', name: 'LAPTOP GAMER ASUS ROG STRIX SCAR 18 (2025) | CORE ULTRA 9 285HX, RTX 5080 16GB, 32GB DDR5, 2TB SSD, 2.5K 240Hz', brand: 'ASUS ROG', priceUSD: 3650.00, pricePEN: 13505.00, originalPriceUSD: 3990.00, stock: 3, ref: 'SCAR18-2025', discount: 9, stockPercent: 75, image: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=350&h=350&fit=crop' },
+                { id: 'fd2', name: 'PC GAMING PLUS: ROG STRIX RTX 5070, RYZEN 7 9800X3D, 32GB DDR5 6000MHz, SSD 2TB GEN4, 850W GOLD, LIQUIDA 360', brand: 'SERCO-BUILD', priceUSD: 2450.00, pricePEN: 9065.00, originalPriceUSD: 2790.00, stock: 5, ref: 'PC-ROG-9800X3D', discount: 12, stockPercent: 60, image: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=350&h=350&fit=crop' },
+                { id: 'fd3', name: 'MONITOR GAMER ASUS ROG SWIFT PG27AQDM OLED 27" 240Hz 0.03ms QHD G-SYNC', brand: 'ASUS ROG', priceUSD: 890.00, pricePEN: 3293.00, originalPriceUSD: 999.00, stock: 6, ref: 'ROG-PG27AQDM', discount: 11, stockPercent: 50, image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=350&h=350&fit=crop' }
             ],
 
             // === Category Cards ===
             categoryCards: [
-                { name: 'Laptops Gaming', count: 145, image: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=400&h=400&fit=crop' },
-                { name: 'Procesadores', count: 89, image: 'https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=400&h=400&fit=crop' },
-                { name: 'Tarjetas de Video', count: 120, image: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=400&h=400&fit=crop' },
-                { name: 'Periféricos', count: 234, image: 'https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=400&h=400&fit=crop' },
-                { name: 'Monitores', count: 78, image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=400&fit=crop' },
-                { name: 'Cases & Gabinetes', count: 56, image: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=400&h=400&fit=crop' }
+                { name: 'Laptops ROG Strix', count: 48, image: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=400&h=400&fit=crop' },
+                { name: 'Tarjetas RTX 50 & 40', count: 85, image: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=400&h=400&fit=crop' },
+                { name: 'Procesadores Ryzen & Ultra', count: 62, image: 'https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=400&h=400&fit=crop' },
+                { name: 'Monitores OLED 360Hz', count: 42, image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=400&fit=crop' },
+                { name: 'Periféricos Aura Sync', count: 120, image: 'https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=400&h=400&fit=crop' },
+                { name: 'Gabinetes & Refrigeración', count: 74, image: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=400&h=400&fit=crop' }
             ],
 
             // === Best Sellers ===
             bestSellers: [
-                { id: 'bs1', name: 'PROCESADOR AMD Ryzen 3 3200G', brand: 'AMD', priceUSD: 81.30, pricePEN: 282.92, stock: 15, stockLabel: '0', ref: '110040481', badge: '', image: 'https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=300&h=300&fit=crop' },
-                { id: 'bs2', name: 'KIT TECLADO + MOUSE LOGITECH MK120 USB', brand: 'LOGITECH', priceUSD: 14.40, pricePEN: 50.11, stock: 30, stockLabel: 'Mayor a 10', ref: '063060057', badge: '', image: 'https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=300&h=300&fit=crop' },
-                { id: 'bs3', name: 'SSD KINGSTON A400 240GB SATA 2.5"', brand: 'KINGSTON', priceUSD: 63.50, pricePEN: 229.98, stock: 40, stockLabel: 'Mayor a 10', ref: '014480146', badge: '', image: 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=300&h=300&fit=crop' },
-                { id: 'bs4', name: 'CAMARA WEB LOGITECH C270 HD 720p', brand: 'LOGITECH', priceUSD: 25.80, pricePEN: 99.78, stock: 20, stockLabel: 'Mayor a 10', ref: '640080031', badge: '', image: 'https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=300&h=300&fit=crop' }
+                { id: 'bs1', name: 'PROCESADOR AMD RYZEN 7 9800X3D 8-CORE 16-THREAD 5.2GHz 3D V-CACHE', brand: 'AMD RYZEN', priceUSD: 520.00, pricePEN: 1924.00, stock: 12, stockLabel: 'En Stock', ref: 'AMD-9800X3D', badge: '', image: 'https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=350&h=350&fit=crop' },
+                { id: 'bs2', name: 'MEMORIA RAM CORSAIR VENGEANCE RGB DDR5 32GB (2x16GB) 6000MHz CL30', brand: 'CORSAIR', priceUSD: 135.00, pricePEN: 499.50, stock: 25, stockLabel: 'Mayor a 10', ref: 'COR-DDR5-32', badge: '', image: 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=350&h=350&fit=crop' },
+                { id: 'bs3', name: 'SSD M.2 NVMe KINGSTON FURY RENEGADE 2TB PCIe 4.0 7300MB/s', brand: 'KINGSTON', priceUSD: 165.00, pricePEN: 610.50, stock: 18, stockLabel: 'Mayor a 10', ref: 'KNG-FURY-2TB', badge: '', image: 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=350&h=350&fit=crop' },
+                { id: 'bs4', name: 'COMBO LOGITECH G PRO X SUPERLIGHT 2 + G PRO X TKL WIRELESS', brand: 'LOGITECH G', priceUSD: 289.00, pricePEN: 1069.30, stock: 10, stockLabel: 'Mayor a 10', ref: 'LOG-PRO-COMBO', badge: '', image: 'https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=350&h=350&fit=crop' }
             ],
 
             // === Gaming Monitors ===
             gamingMonitors: [
-                { id: 'gm1', name: 'MONITOR MSI MAG 272PF X24, 27" RAPID IPS, FHD, 24Hz, 0.5ms, FreeSync', brand: 'MSI', priceUSD: 162.40, pricePEN: 565.15, stock: 15, stockLabel: 'Mayor a 10', ref: '081046180', badge: '', image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=300&h=300&fit=crop' },
-                { id: 'gm2', name: 'MONITOR ASUS TuF Gaming VG279Q3A, 27" IPS, FHD 1920 x 1080, DC 144Hz, 1ms', brand: 'ASUS', priceUSD: 112.90, pricePEN: 392.69, stock: 8, stockLabel: '8', ref: '081046158', badge: '', image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=300&h=300&fit=crop' },
-                { id: 'gm3', name: 'MONITOR GAMING GIGABYTE GS25F14, 24.5" IPS, FHD, 144Hz, 1ms, AMD FreeSync', brand: 'GIGABYTE', priceUSD: 85.00, pricePEN: 295.80, stock: 10, stockLabel: '10', ref: '081080182', badge: '', image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=300&h=300&fit=crop' },
-                { id: 'gm4', name: 'MONITOR MSI MAG 274QPF X02, 27" RAPID IPS, WQHD, 200Hz, 0.5ms, Compatible G-Sync, FreeSync', brand: 'MSI', priceUSD: 253.70, pricePEN: 882.88, stock: 12, stockLabel: 'Mayor a 10', ref: '081046181', badge: 'Nuevo', image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=300&h=300&fit=crop' }
+                { id: 'gm1', name: 'MONITOR ASUS ROG STRIX XG27AQMR 27" FAST IPS 300Hz 1ms 2K QHD HDR600', brand: 'ASUS ROG', priceUSD: 599.00, pricePEN: 2216.30, stock: 6, stockLabel: '6', ref: 'ROG-XG27AQMR', badge: '300Hz', image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=350&h=350&fit=crop' },
+                { id: 'gm2', name: 'MONITOR ASUS TUF GAMING VG27AQ3A 27" IPS 2K 180Hz 1ms ELMB SYNC', brand: 'ASUS TUF', priceUSD: 245.00, pricePEN: 906.50, stock: 14, stockLabel: 'Mayor a 10', ref: 'TUF-VG27AQ3A', badge: '', image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=350&h=350&fit=crop' },
+                { id: 'gm3', name: 'MONITOR MSI MAG 274QRF QD E2 27" QUANTUM DOT RAPID IPS 180Hz 2K', brand: 'MSI', priceUSD: 289.00, pricePEN: 1069.30, stock: 8, stockLabel: '8', ref: 'MSI-274QRF', badge: 'Nuevo', image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=350&h=350&fit=crop' }
             ],
 
             // === Sidebar Monitors ===
             sidebarMonitors: [
-                { id: 'sm1', name: 'MONITOR GIGABYTE A...', priceUSD: 958.80, pricePEN: 3336.62, image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=100&h=100&fit=crop' },
-                { id: 'sm2', name: 'MONITOR ASUS TUF G...', priceUSD: 92.60, pricePEN: 322.25, image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=100&h=100&fit=crop' },
-                { id: 'sm3', name: 'MONITOR GAMING LG ...', priceUSD: 176.70, pricePEN: 614.92, image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=100&h=100&fit=crop' },
-                { id: 'sm4', name: 'MONITOR LG UltraGear...', priceUSD: 577.20, pricePEN: 2008.66, image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=100&h=100&fit=crop' }
-            ],
-
-            // === Sidebar Offers ===
-            sidebarOffers: [
-                { id: 'so1', name: 'PC Gaming RTX 4060 + Ryzen 5 5600X', pricePEN: 3200.00, image: 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=100&h=100&fit=crop' },
-                { id: 'so2', name: 'PC Gaming RTX 3060 + Intel i5 12400F', pricePEN: 2500.00, image: 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=100&h=100&fit=crop' }
+                { id: 'sm1', name: 'ASUS ROG Swift OLED PG32UCDM 4K 240Hz', priceUSD: 1299.00, pricePEN: 4806.30, image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=100&h=100&fit=crop' },
+                { id: 'sm2', name: 'ASUS ROG Strix XG27ACS 27" Fast IPS 180Hz', priceUSD: 299.00, pricePEN: 1106.30, image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=100&h=100&fit=crop' },
+                { id: 'sm3', name: 'MSI MAG 341CQP QD-OLED 34" Curvo 175Hz', priceUSD: 899.00, pricePEN: 3326.30, image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=100&h=100&fit=crop' }
             ],
 
             // === Brand Logos ===
             brandLogos: [
-                { name: 'addlink', color: '#333' },
-                { name: 'ASUS', color: '#000' },
-                { name: 'brother', color: '#005BAC' },
-                { name: 'DELL', color: '#007DB8' },
-                { name: 'MSI', color: '#FF0000' },
-                { name: 'GIGABYTE', color: '#EF6C00' }
+                { name: 'ROG STRIX', color: '#FF007F' },
+                { name: 'ASUS', color: '#00F0FF' },
+                { name: 'MSI GAMING', color: '#FF003F' },
+                { name: 'AORUS', color: '#FF6600' },
+                { name: 'CORSAIR', color: '#FFD700' },
+                { name: 'LOGITECH G', color: '#00D2FF' }
             ],
 
             // === Shopping Cart ===
@@ -1221,14 +1460,21 @@
             // METHODS
             // ==========================================
 
-            // Initialize application
             initApp() {
-                // Auto-play hero slider
+                // Check theme preference or default to dark
+                const savedTheme = localStorage.getItem('sercoplus_theme');
+                if (savedTheme !== null) {
+                    this.darkMode = savedTheme === 'dark';
+                } else {
+                    this.darkMode = true; // ROG Strix Dark Mode default
+                }
+                
+                // Auto hero slider
                 this.slideInterval = setInterval(() => {
                     this.nextSlide();
-                }, 5000);
+                }, 5500);
 
-                // Countdown timer
+                // Countdown Timer Interval
                 setInterval(() => {
                     if (this.countdown.seconds > 0) {
                         this.countdown.seconds--;
@@ -1240,13 +1486,16 @@
                         this.countdown.minutes = 59;
                         this.countdown.seconds = 59;
                     } else {
-                        // Reset countdown
                         this.countdown = { hours: 23, minutes: 59, seconds: 59 };
                     }
                 }, 1000);
             },
 
-            // Hero slider controls
+            toggleTheme() {
+                this.darkMode = !this.darkMode;
+                localStorage.setItem('sercoplus_theme', this.darkMode ? 'dark' : 'light');
+            },
+
             nextSlide() {
                 this.currentSlide = (this.currentSlide + 1) % this.heroSlides.length;
             },
@@ -1254,7 +1503,6 @@
                 this.currentSlide = (this.currentSlide - 1 + this.heroSlides.length) % this.heroSlides.length;
             },
 
-            // Search filter
             filteredProducts() {
                 if (this.searchQuery.length < 2) return [];
                 const q = this.searchQuery.toLowerCase();
@@ -1265,10 +1513,9 @@
                     ...this.bestSellers,
                     ...this.gamingMonitors
                 ];
-                return allProducts.filter(p => p.name.toLowerCase().includes(q)).slice(0, 6);
+                return allProducts.filter(p => p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q)).slice(0, 6);
             },
 
-            // Cart methods
             addToCart(product) {
                 const existing = this.cart.find(item => item.id === product.id);
                 if (existing) {
@@ -1297,11 +1544,10 @@
                 return this.cart.reduce((sum, item) => sum + (item.pricePEN * item.qty), 0);
             },
 
-            // Carousel scroll
             scrollCarousel(name, direction) {
                 const el = document.getElementById('carousel-' + name);
                 if (el) {
-                    const scrollAmount = 240 * direction;
+                    const scrollAmount = 260 * direction;
                     el.scrollBy({ left: scrollAmount, behavior: 'smooth' });
                 }
             }
